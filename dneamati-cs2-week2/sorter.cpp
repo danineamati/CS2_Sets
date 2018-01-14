@@ -113,27 +113,162 @@ std::vector<int> bubbleSort(std::vector<int> &list)
 }
 
 /**
- * TODO: Implement this function.
+ * For simplicity, the first element will be chosen as the pivot. The
+ * rightmost element is checked. 
+ *
+ * If it is larger than the pivot, we skip it and check the next element.
+ *
+ * If it is smaller than the pivot, the value is moved to the left of 
+ * the pivot. 
+ * This happens by swapping the unchecked value (U) the to right of the pivot
+ * (P) with the value being checked (V). Then swapping the pivot andthe value
+ * being checked:
+ *
+ * 4 5 2 3 1 2 7 3
+ * ^ ^         ^
+ * P U         V
+ *
+ * 4 7 2 3 1 2 5 3
+ * ^ ^         ^
+ * P V         U
+ *
+ * 7 4 2 3 1 2 5 3
+ * ^ ^         ^
+ * V P         U
+ * 
+ * It then splits the two sides into two vectrors to be sorted.
+ *
+ * @param list: pointer to vector of arrays to by sorted
+ * @return: the sorted list
  */
 std::vector<int> quickSort(std::vector<int> &list)
 {
+    // print_vector(list);
+    // std::cout << "------" << std::endl;
+    if (list.size() <= 1)
+        return list;
+    else
+    {
+        int pivot = list[0];
+        int pivot_index = 0;
+        for (int i = list.size() - 1; i > pivot_index; i--)
+        {
+            if (list[i] < pivot) // Swap needs to happen
+            {
+                // Swap 'U' with 'V'
+                int temp = list[pivot_index + 1];
+                list[pivot_index + 1] = list[i];
+                list[i] = temp;
+
+                // Swap pivot and 'V'
+                temp = list[pivot_index];
+                list[pivot_index] = list[pivot_index + 1];
+                list[pivot_index + 1] = temp;
+
+                i++; // Stay at same i, since value unchecked
+                pivot_index++;
+            }
+        }
+
+        // Now we split the vector in two
+        // Start by making the left vector (not including the pivot)
+        if (pivot_index > 0) {
+            std::vector<int>::const_iterator left_start = list.begin();
+            std::vector<int>::const_iterator left_end = 
+                list.begin() + pivot_index;
+            std::vector<int> left(left_start, left_end);
+            // std::cout << "Left Vector" << std::endl;
+            // print_vector(left);
+            // std::cout << "_______" << std::endl;
+
+            // Recursively call quicksort on list
+            left = quickSort(left);
+        }
+        
+
+        // Repeat with right vector
+        if ((unsigned int) pivot_index < list.size() - 1)
+        {
+            std::vector<int>::const_iterator right_start =
+                list.begin() + pivot_index + 1;
+            std::vector<int>::const_iterator right_end = list.end();
+            std::vector<int> right(right_start, right_end);
+            // std::cout << "Right Vector" << std::endl;
+            // print_vector(right);
+            // std::cout << "_______" << std::endl;
+
+            // Recursively call quicksort on list
+            right = quickSort(right);
+        }
+    }
+
+
+    // print_vector(list);
+    // std::cout << "------" << std::endl;
     return list;
 }
 
 /**
- * TODO: Implement this function.
+ * Merge Sort will split the vector in two and then call merge sort
+ * followed by merge on each half.
+ * It has the base case that if the size of the vector is one, it is
+ * definitely sorted so it can return it directly.
+ * By the time the sublists are merged, the sublists are sorted with
+ * respect to itself.
+ *
+ * @param list: pointer to vector of arrays to by sorted
+ * @return: the sorted list
  */
 std::vector<int> mergeSort(std::vector<int> &list)
 {
+    if (list.size() <= 1)
+        return list;
+
+    // Split list in two
+
+    // Left vector
+    std::vector<int>::const_iterator left_start = list.begin();
+    std::vector<int>::const_iterator left_end = 
+        list.begin() + (list.size() / 2);
+    std::vector<int> left(left_start, left_end);
+
+    // Right vector
+    std::vector<int>::const_iterator right_start = 
+        list.begin() + (list.size() / 2);
+    std::vector<int>::const_iterator right_end = 
+        list.begin() + list.size();
+    std::vector<int> right(right_start, right_end);
+
+
+    // Recursively call mergesort on each list
+    left = mergeSort(left);
+    right = mergeSort(right);
+    //list = merge(left, right);
+
     return list;
 }
 
 /**
- * TODO: Implement this function.
+ * @ brief: Takes two sorted vectors and merges them together.
  */
 std::vector<int> merge(std::vector<int> &left, std::vector<int> &right)
 {
-    return left;
+    std::vector<int> merged;
+
+    for (int i = 0; i < left.size(); ++i)
+    {
+        for (int j = 0; j < right.size(); ++j)
+        {
+            if (left[i] < right[j])
+                merged.push_back(left[i]);
+            else if (right[j] < left[i])
+                merged.push_back(right[j]);
+            else
+                merged.push_back(left[i]);
+        }
+    }
+
+    return merged;
 }
 
 /*
@@ -153,6 +288,58 @@ std::vector<int> merge(std::vector<int> &left, std::vector<int> &right)
  */
 void quicksort_inplace(std::vector<int> &list, int left, int right)
 {
+    // print_vector(list);
+    // std::cout << "------" << std::endl;
+    if (list.size() <= 1)
+        return;
+    else
+    {
+        int pivot = list[left];
+        int pivot_index = left;
+        for (int i = right; i > pivot_index; i--)
+        {
+            if (list[i] < pivot) // Swap needs to happen
+            {
+                // Swap 'U' with 'V'
+                int temp = list[pivot_index + 1];
+                list[pivot_index + 1] = list[i];
+                list[i] = temp;
+
+                // Swap pivot and 'V'
+                temp = list[pivot_index];
+                list[pivot_index] = list[pivot_index + 1];
+                list[pivot_index + 1] = temp;
+
+                i++; // Stay at same i, since value unchecked
+                pivot_index++;
+            }
+        }
+
+        // Now we split the vector in two
+        // Start by making the left vector (not including the pivot)
+        if (pivot_index > 0) {
+            int left_start = 0;
+            int left_end = pivot_index - 1;
+
+            // Recursively call quicksort on sub-list
+            quicksort_inplace(list, left_start, left_end);
+        }
+        
+
+        // Repeat with right vector
+        if (pivot_index < right - 1)
+        {
+            int right_start = pivot_index + 1;
+            int right_end = right;
+
+            // Recursively call quicksort on sub-list
+            quicksort_inplace(list, right_start, right_end);
+        }
+    }
+
+
+    // print_vector(list);
+    // std::cout << "------" << std::endl;
     return;
 }
 

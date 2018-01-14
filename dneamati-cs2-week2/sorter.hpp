@@ -36,6 +36,8 @@
 
 std::vector<int> bubbleSort(std::vector<int> &list);
 std::vector<int> quickSort(std::vector<int> &list);
+std::vector<int> quickmerge(std::vector<int> &left, int pivot, 
+	std::vector<int> &right);
 void quicksort_inplace(std::vector<int> &list, int left, int right);
 std::vector<int> mergeSort(std::vector<int> &list);
 std::vector<int> merge(std::vector<int> &left, std::vector<int> &right);

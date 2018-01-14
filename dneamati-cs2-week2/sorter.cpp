@@ -172,34 +172,27 @@ std::vector<int> quickSort(std::vector<int> &list)
 
         // Now we split the vector in two
         // Start by making the left vector (not including the pivot)
-        if (pivot_index > 0) {
-            std::vector<int>::const_iterator left_start = list.begin();
-            std::vector<int>::const_iterator left_end = 
-                list.begin() + pivot_index;
-            std::vector<int> left(left_start, left_end);
-            // std::cout << "Left Vector" << std::endl;
-            // print_vector(left);
-            // std::cout << "_______" << std::endl;
+        std::vector<int>::const_iterator left_start = list.begin();
+        std::vector<int>::const_iterator left_end = 
+            list.begin() + pivot_index;
+        std::vector<int> left(left_start, left_end);
 
-            // Recursively call quicksort on list
-            left = quickSort(left);
-        }
+        // Recursively call quicksort on list
+        left = quickSort(left);
         
 
         // Repeat with right vector
-        if ((unsigned int) pivot_index < list.size() - 1)
-        {
-            std::vector<int>::const_iterator right_start =
-                list.begin() + pivot_index + 1;
-            std::vector<int>::const_iterator right_end = list.end();
-            std::vector<int> right(right_start, right_end);
-            // std::cout << "Right Vector" << std::endl;
-            // print_vector(right);
-            // std::cout << "_______" << std::endl;
+        std::vector<int>::const_iterator right_start =
+            list.begin() + pivot_index + 1;
+        std::vector<int>::const_iterator right_end = list.end();
+        std::vector<int> right(right_start, right_end);
 
-            // Recursively call quicksort on list
-            right = quickSort(right);
-        }
+        // Recursively call quicksort on list
+        right = quickSort(right);
+
+
+        // Now we recombine the sorted lists
+        list = quickmerge(left, pivot, right);
     }
 
 
@@ -207,6 +200,24 @@ std::vector<int> quickSort(std::vector<int> &list)
     // std::cout << "------" << std::endl;
     return list;
 }
+
+
+/**
+ * @brief: appends the pivot and the contents in the right list to contents
+ * in the left list
+ */
+std::vector<int> quickmerge(std::vector<int> &left, int pivot, 
+    std::vector<int> &right)
+{
+    left.push_back(pivot);
+
+    for (size_t i = 0; i < right.size(); i++)
+    {
+        left.push_back(right[i]);
+    }
+    return left;
+}
+
 
 /**
  * Merge Sort will split the vector in two and then call merge sort
@@ -243,7 +254,7 @@ std::vector<int> mergeSort(std::vector<int> &list)
     // Recursively call mergesort on each list
     left = mergeSort(left);
     right = mergeSort(right);
-    //list = merge(left, right);
+    list = merge(left, right);
 
     return list;
 }
@@ -255,17 +266,36 @@ std::vector<int> merge(std::vector<int> &left, std::vector<int> &right)
 {
     std::vector<int> merged;
 
-    for (int i = 0; i < left.size(); ++i)
+    while (!left.empty() && !right.empty())
     {
-        for (int j = 0; j < right.size(); ++j)
+        if (left[0] <= right[0])
         {
-            if (left[i] < right[j])
-                merged.push_back(left[i]);
-            else if (right[j] < left[i])
-                merged.push_back(right[j]);
-            else
-                merged.push_back(left[i]);
+            merged.push_back(left[0]);
+            // now we remove first element of left so we do not repeat it
+            left.erase(left.begin());
         }
+           
+        else if (right[0] < left[0]) 
+        {
+            merged.push_back(right[0]);
+            // now we remove first element of right so we do not repeat it
+            right.erase(right.begin());
+        }
+    }
+
+    // Because of the "and" above left or right may not be empty.
+    while (!left.empty())
+    {
+        merged.push_back(left[0]);
+        // now we remove first element of left so we do not repeat it
+        left.erase(left.begin());
+    }
+
+    while (!right.empty())
+    {
+        merged.push_back(right[0]);
+        // now we remove first element of right so we do not repeat it
+        right.erase(right.begin());
     }
 
     return merged;

@@ -27,7 +27,10 @@ void readFile(char const *file, std::vector<int> &nums);
  */
 inline void print_vector(std::vector<int> v)
 {
-    // TODO Write a function to print out a vector of integers.
+    for (auto i = v.begin(); i != v.end(); i++)
+    {
+    	std::cout << *i << std::endl;
+    }
 }
 
 #endif

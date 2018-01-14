@@ -12,6 +12,16 @@
 #include <iostream>
 
 /**
+ * The code was leaky since it only deleted the head of the linked list.
+ * Since the other elements were still intact, albeit no longer reachable,
+ * the memory was lost in the termination of the program. 
+ * This is a problem since the program is using up memory that it is not 
+ * using. If the linked list was very long, this would be a non-trivial
+ * amount of memory.
+ * This was fixed by simply removing each element of the linked list.
+ */
+
+/**
  * A class defining the shell of a linked list data structure.
  */
 class List

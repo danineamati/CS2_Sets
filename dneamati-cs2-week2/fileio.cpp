@@ -9,6 +9,9 @@
  */
 
 #include "fileio.hpp"
+#include <iostream>
+#include <fstream>
+#include <string>
 
 /**
  * @brief Reads the integers in file and fills nums with these integers.
@@ -21,6 +24,18 @@
  */
 void readFile(char const *file, std::vector<int> &nums)
 {
-    // TODO Write a function which takes a filename and a vector of integers as
-    // arguments and filles the vector with integers from the specified file.
+    std::string line;
+    std::ifstream currentFile(file);
+    if (currentFile.is_open())
+    {
+    	while (getline(currentFile, line))
+    	{
+    		nums.push_back(stoi(line));
+    	}
+    }
+    else 
+    {
+    	std::cout << "Could not open file. Verify this is yout file: ";
+    	std::cout << file << std::endl;
+    }
 }

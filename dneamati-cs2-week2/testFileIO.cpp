@@ -9,6 +9,7 @@
  */
 
 #include "fileio.hpp"
+#include <vector>
 
 /**
  * @brief Read the file input and print out its contents
@@ -18,8 +19,18 @@
 int main(int argc, char const *argv[])
 {
 
-    // TODO Write test code to instantiate a vector, then calls the readFile and
-    // print_vector functions to demonstrat that the file was read successfully.
+    if (argc == 2)
+    {
+    	//instantiates a vector, calls the readFile and print_vector
+    	std::vector<int> nums;
+    	readFile(argv[1], nums);
+    	print_vector(nums);
+    }
+    else
+    {
+    	std::cout << "Must include exactly one addition arguement." << std::endl;
+    	std::cout << "Example: ./testFileIO nums" << std::endl;
+    }
 
     return 0;
 }

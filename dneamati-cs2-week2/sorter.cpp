@@ -85,10 +85,30 @@ void usage()
  */
 
 /**
- * TODO: Implement this function.
+ * This function sort a list by bubbling up large elements to the right.
+ * It does this by looping through a vector. If the element is larger than the
+ * adjacent element after it, it swaps those numbers. After each iteration,
+ * it no longer has to loop through the sorted elements.
  */
 std::vector<int> bubbleSort(std::vector<int> &list)
 {
+    int remaining = list.size() - 1;
+    while (remaining > 0)
+    {
+        int last_swap = 0; // No last swap yet
+        for (int i = 0; i < remaining; i++)
+        {
+            if (list[i] > list[i + 1]) // Elements can switch
+            {
+                int temp = list[i + 1]; // Save next element
+                list[i + 1] = list[i]; // Swap elements
+                list[i] = temp; // Return next to current
+                last_swap = i; // This is the new most recent swap
+            }
+        }
+        remaining = last_swap; // If we get lucky, we don't need to loop the last
+        // few elements.
+    }
     return list;
 }
 

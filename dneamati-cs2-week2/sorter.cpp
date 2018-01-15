@@ -143,8 +143,6 @@ std::vector<int> bubbleSort(std::vector<int> &list)
  */
 std::vector<int> quickSort(std::vector<int> &list)
 {
-    // print_vector(list);
-    // std::cout << "------" << std::endl;
     if (list.size() <= 1)
         return list;
     else
@@ -194,10 +192,6 @@ std::vector<int> quickSort(std::vector<int> &list)
         // Now we recombine the sorted lists
         list = quickmerge(left, pivot, right);
     }
-
-
-    // print_vector(list);
-    // std::cout << "------" << std::endl;
     return list;
 }
 
@@ -318,8 +312,6 @@ std::vector<int> merge(std::vector<int> &left, std::vector<int> &right)
  */
 void quicksort_inplace(std::vector<int> &list, int left, int right)
 {
-    // print_vector(list);
-    // std::cout << "------" << std::endl;
     if (list.size() <= 1)
         return;
     else
@@ -366,10 +358,6 @@ void quicksort_inplace(std::vector<int> &list, int left, int right)
             quicksort_inplace(list, right_start, right_end);
         }
     }
-
-
-    // print_vector(list);
-    // std::cout << "------" << std::endl;
     return;
 }
 

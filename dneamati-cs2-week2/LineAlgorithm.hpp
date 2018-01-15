@@ -16,11 +16,13 @@
 #include <cstdlib>
 #include <stdlib.h>
 #include <iostream>
+#include <cmath>
 #include "LineApp.hpp"
 #include "structs.hpp"
 
 using namespace std;
 
+double calculateError(double slope, Tuple &p2, Tuple &ptest);
 // Student implemented line algorithm
 vector<Tuple> line(Tuple p1, Tuple p2);
 

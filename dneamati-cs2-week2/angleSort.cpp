@@ -22,7 +22,7 @@
  */
 void sort(vector<Tuple*> &points, vector<double> &angles, int left, int right)
 {
-    if (angles.size() <= 1)
+    if (right - left <= 1)
         return;
     else
     {

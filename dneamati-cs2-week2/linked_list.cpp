@@ -9,6 +9,11 @@
  *
  */
 
+/*
+ * Daniel Neamati
+ * For a destructor that clears linked lists, see warmup
+ */
+
 #include <iostream>
 
 /**

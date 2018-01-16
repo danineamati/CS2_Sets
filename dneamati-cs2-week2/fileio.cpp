@@ -8,6 +8,10 @@
  * @brief A brief example of file input (implementation).
  */
 
+/*
+ * Daniel Neamati
+ */
+
 #include "fileio.hpp"
 #include <iostream>
 #include <fstream>

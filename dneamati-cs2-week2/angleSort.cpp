@@ -11,6 +11,9 @@
 #include "structs.hpp"
 #include <vector>
 
+/*
+ * Daniel Neamati
+ */
 
 /**
  * @brief: This is a modification of the in-place quick sort algorithm that

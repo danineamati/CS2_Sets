@@ -9,6 +9,11 @@
  * algorithms (implementation).
  *
  */
+
+/*
+ * Daniel Neamati
+ */
+
 #include "sorter.hpp"
 
 int main(int argc, char* argv[])

@@ -8,6 +8,12 @@
  * @brief Student implementation of line algorithm.
  *
  */
+
+/*
+ * Daniel Neamati
+ */
+
+
 #include "LineAlgorithm.hpp"
 
 /**

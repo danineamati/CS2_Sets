@@ -2,6 +2,9 @@
 #ifndef __LINKEDLIST_H__
 #define __LINKEDLIST_H__
 
+/*
+ * Daniel Neamati
+ */
 
 struct Node
     {

@@ -9,6 +9,10 @@
  *
  */
 
+/*
+ * Daniel Neamati
+ */
+
 #include "linked_list.hpp"
 #include <iostream>
 #include <vector>

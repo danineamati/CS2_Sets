@@ -11,6 +11,10 @@
  */
 #include "HullAlgorithms.hpp"
 
+/*
+ * Daniel Neamati
+ */
+
 /**
  * @brief: Prints a vector of points
  */
@@ -129,9 +133,8 @@ void printPointsAngles(vector<Tuple*> points, vector<double> angles)
  *         left: Left bound to be sorted
  *         right: Right bound to be sorted
  */
-/*void sort(vector<Tuple*> &points, vector<double> &angles, int left, int right)
+void sort(vector<Tuple*> &points, vector<double> &angles, int left, int right)
 {
-    cout << right - left << endl;
     if (right - left <= 1)
         return;
     else
@@ -164,14 +167,12 @@ void printPointsAngles(vector<Tuple*> points, vector<double> angles)
                 pivot_index++;
             }
         }
-        cout << "pivot " << pivot_index << endl;
 
         // Now we split the vector in two
         // Start by making the left vector (not including the pivot)
         if (pivot_index > 0) {
             int left_start = 0;
             int left_end = pivot_index - 1;
-            cout << "left end " << left_end << endl;
 
             // Recursively call quicksort on sub-list
             sort(points, angles, left_start, left_end);
@@ -179,88 +180,16 @@ void printPointsAngles(vector<Tuple*> points, vector<double> angles)
         
 
         // Repeat with right vector
-        if (pivot_index < right)
+        if (pivot_index < right - 1)
         {
             int right_start = pivot_index + 1;
             int right_end = right;
-            cout << "right_start " << right_start << endl;
 
             // Recursively call quicksort on sub-list
             sort(points, angles, right_start, right_end);
         }
     }
     return;
-}*/
-
-vector<double> mergeSort(vector<Tuple*> &points, vector<double> &angles)
-{
-    if (angles.size() <= 1)
-        return angles;
-
-    // Split list in two
-
-    // Left vector
-    std::vector<double>::const_iterator left_start = angles.begin();
-    std::vector<double>::const_iterator left_end = 
-        angles.begin() + (angles.size() / 2);
-    std::vector<double> left(left_start, left_end);
-
-    // Right vector
-    std::vector<double>::const_iterator right_start = 
-        angles.begin() + (angles.size() / 2);
-    std::vector<double>::const_iterator right_end = 
-        angles.begin() + angles.size();
-    std::vector<double> right(right_start, right_end);
-
-
-    // Recursively call mergesort on each list
-    left = mergeSort(points, left);
-    right = mergeSort(points, right);
-    angles = merge(left, right);
-
-    return angles;
-}
-
-/**
- * @ brief: Takes two sorted vectors and merges them together.
- */
-vector<double> merge(vector<double> &left, vector<double> &right)
-{
-    std::vector<double> merged;
-
-    while (!left.empty() && !right.empty())
-    {
-        if (left[0] <= right[0])
-        {
-            merged.push_back(left[0]);
-            // now we remove first element of left so we do not repeat it
-            left.erase(left.begin());
-        }
-           
-        else if (right[0] < left[0]) 
-        {
-            merged.push_back(right[0]);
-            // now we remove first element of right so we do not repeat it
-            right.erase(right.begin());
-        }
-    }
-
-    // Because of the "and" above left or right may not be empty.
-    while (!left.empty())
-    {
-        merged.push_back(left[0]);
-        // now we remove first element of left so we do not repeat it
-        left.erase(left.begin());
-    }
-
-    while (!right.empty())
-    {
-        merged.push_back(right[0]);
-        // now we remove first element of right so we do not repeat it
-        right.erase(right.begin());
-    }
-
-    return merged;
 }
 
 
@@ -302,7 +231,7 @@ bool testPoint(ConvexHullApp *app, vector<Tuple*> &points, int hull_pt, int test
                 points[next_pt]);
 
         // If right turn discard test_pt and return false
-        if (!cross)
+        if (cross)
         {
             return false;
         }
@@ -311,7 +240,7 @@ bool testPoint(ConvexHullApp *app, vector<Tuple*> &points, int hull_pt, int test
         else
         {
             bool check = testPoint(app, points, test_pt, next_pt);
-            if (check)
+            if (!check)
             {
                 app->add_to_hull(points[test_pt]);
                 return true; // Now it can back track through the stack
@@ -331,31 +260,24 @@ void DoGrahamScan(vector<Tuple*> points, ConvexHullApp *app)
     int index_small = smallest_point(points);
     Tuple* smallest_pt = points[index_small];
     app->add_to_hull(smallest_pt);
-    cout << "Smallest: " << index_small << endl;
-    cout << points.size() << endl;
 
     // Calculate Angles
     vector<double> angles = calculateAngles(points, index_small);
-    cout << "Angles: " << angles.size() << endl;
 
+    /*
     for (int i = 0; i < (int) points.size(); i++)
     {
         points[i]->printTuple();
         cout << angles[i] << endl;
     }
+    */
 
     // Sort Angles
-    mergeSort(points, angles);
+    sort(points, angles, 0, (int) angles.size() - 1);
     cout << "Done" << endl;
+    //printPointsAngles(points, angles);
     
 
     // Test Point for right turns
-    //testPoint(app, points, index_small, 1);
-
-    /*
-    for (unsigned int i = 0; i < points.size(); ++i)
-    {
-        app->add_to_hull(points[i]);
-    }
-    app->add_to_hull(points[0]);*/
+    testPoint(app, points, index_small, 1);
 }

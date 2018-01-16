@@ -9,6 +9,10 @@
  *
  */
 
+/*
+ * Daniel Neamati
+ */
+
 #ifndef __LINE_ALGORITHM_H__
 #define __LINE_ALGORITHM_H__
 

@@ -9,6 +9,12 @@
  * algorithms (header file).
  *
  */
+
+/*
+ * Daniel Neamati
+ */
+
+
 #include <iostream>
 #include <fstream>
 #include <sstream>

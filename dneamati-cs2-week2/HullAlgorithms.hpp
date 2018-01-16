@@ -10,6 +10,10 @@
  *
  */
 
+/*
+ * Daniel Neamati
+ */
+
 #include <vector>
 #include <cstdlib>
 #include <stdlib.h>
@@ -26,9 +30,7 @@ bool crossproduct(Tuple *pt_known, Tuple *pt_next, Tuple *pt_checking);
 void DoGiftWrap(vector<Tuple*> points, ConvexHullApp *app);
 
 void printPointsAngles(vector<Tuple*> points, vector<double> angles);
-//void sort(vector<Tuple*> &points, vector<double> &angles, int left, int right);
-vector<double> mergeSort(vector<Tuple*> &points, vector<double> &angles);
-vector<double> merge(vector<double> &left, vector<double> &right);
+void sort(vector<Tuple*> &points, vector<double> &angles, int left, int right);
 
 vector<double> calculateAngles(vector<Tuple*> &points, int smallest_pt);
 bool testPoint(ConvexHullApp *app, vector<Tuple*> &points, int hull_pt, int test_pt);

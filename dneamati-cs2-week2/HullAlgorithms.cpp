@@ -203,7 +203,8 @@ vector<double> calculateAngles(vector<Tuple*> &points, int index_small)
     double angle;
     for (int i = 0; i < (int) points.size(); ++i)
     {
-        angle = points[index_small]->angle_wrt_pt(points[i]);
+        //angle = points[index_small]->angle_wrt_pt(points[i]);
+        angle = points[i]->angle_wrt_x_axis();
         angles.push_back(angle);
     }
 
@@ -217,6 +218,7 @@ vector<double> calculateAngles(vector<Tuple*> &points, int index_small)
 bool testPoint(ConvexHullApp *app, vector<Tuple*> &points, int hull_pt, int test_pt)
 {
     cout << hull_pt << endl;
+
     // The last sorted point is always in the hull, so we set the end of the
     // recursion as the last point
     if (test_pt == (int) points.size() - 1)
@@ -242,6 +244,7 @@ bool testPoint(ConvexHullApp *app, vector<Tuple*> &points, int hull_pt, int test
             bool check = testPoint(app, points, test_pt, next_pt);
             if (!check)
             {
+                cout << "Added to hull" << endl;
                 app->add_to_hull(points[test_pt]);
                 return true; // Now it can back track through the stack
             }
@@ -264,20 +267,22 @@ void DoGrahamScan(vector<Tuple*> points, ConvexHullApp *app)
     // Calculate Angles
     vector<double> angles = calculateAngles(points, index_small);
 
-    /*
-    for (int i = 0; i < (int) points.size(); i++)
-    {
-        points[i]->printTuple();
-        cout << angles[i] << endl;
-    }
-    */
-
     // Sort Angles
     sort(points, angles, 0, (int) angles.size() - 1);
     cout << "Done" << endl;
+
+    // Add the smallest angle to hull
+    app->add_to_hull(points[points.size() - 1]);
     //printPointsAngles(points, angles);
     
 
     // Test Point for right turns
+    // We use the program's stack as our stack
+    // We add points to the stack as we test. If we confirm a point,
+    // we add it to the hull.
+    // This helper function is recursive.
     testPoint(app, points, index_small, 1);
+
+    // Add the starting point to finish the loop
+    app->add_to_hull(smallest_pt);
 }

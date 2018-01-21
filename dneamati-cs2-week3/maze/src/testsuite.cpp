@@ -48,25 +48,122 @@
 #include "CoordinateStack.hpp"
 #include "CoordinateQueue.hpp"
 
-int main()
+bool testStack(CoordinateStack *stack)
 {
     Coordinate c = Coordinate(0,0);
-    CoordinateQueue *queue = new CoordinateQueue();
-    CoordinateStack *stack = new CoordinateStack();
-
-    std::cout << "Made the test" << std::endl;
-
-
     stack->push(c);
+
+    std::cout << "Peeking at Coordinate (0,0)." << std::endl;
     Coordinate topPeek = stack->peek();
+    std::cout << "Peeked Value: ";
     std::cout << topPeek.x << " " << topPeek.y << std::endl;
 
     stack->push(Coordinate(1, 1));
+    std::cout << "Peeking at Coordinate (1,1)." << std::endl;
     topPeek = stack->peek();
+    std::cout << "Peeked Value: ";
     std::cout << topPeek.x << " " << topPeek.y << std::endl;
+
+    std::cout << "Popping Coordinate (1,1)." << std::endl;
     Coordinate topPop = stack->pop();
+    std::cout << "Popped Value: ";
     std::cout << topPop.x << " " << topPop.y << std::endl;
 
+    for (int i = 0; i < 11; ++i)
+    {
+        stack->push(Coordinate(i, i + 4));
+    }
+
+    for (int i = 10; i >= 0; --i)
+    {
+        std::cout << "Peeking at Coordinate (" << i << ',' << i + 4 << ')';
+        std::cout << std::endl;
+        topPeek = stack->peek();
+        std::cout << "Peeked Value: ";
+        std::cout << topPeek.x << " " << topPeek.y << std::endl;
+
+        std::cout << "Popping Coordinate (" << i << ',' << i + 4 << ')';
+        std::cout << std::endl;
+        topPop = stack->pop();
+        std::cout << "Popped Value: ";
+        std::cout << topPop.x << " " << topPop.y << std::endl;
+    }
+
+    std::cout << "Popping Coordinate (0,0)." << std::endl;
+    topPop = stack->pop();
+    std::cout << "Popped Value: ";
+    std::cout << topPop.x << " " << topPop.y << std::endl;
+
+    std::cout << "Attempt to Pop Last Coordinate (nullptr)";
+    std::cout << std::endl;
+    topPop = stack->pop();
+    std::cout << "Popped Value: ";
+    std::cout << topPop.x << " " << topPop.y << std::endl;
+
+    return true;
+}
+
+bool testQueue(CoordinateQueue *queue)
+{
+    queue->enqueue(Coordinate(0,0));
+    std::cout << "Peeking at Coordinate (0,0)." << std::endl;
+    Coordinate frontPeek = queue->peek();
+    std::cout << "Peeked Value: ";
+    std::cout << frontPeek.x << " " << frontPeek.y << std::endl;
+
+    std::cout << "Dequeuing Coordinate (0,0)." << std::endl;
+    Coordinate frontPop = queue->dequeue();
+    std::cout << "Dequeued Value: ";
+    std::cout << frontPop.x << " " << frontPop.y << std::endl;
+
+    queue->enqueue(Coordinate(1,1));
+    std::cout << "Peeking at Coordinate (1,1)." << std::endl;
+    frontPeek = queue->peek();
+    std::cout << "Peeked Value: ";
+    std::cout << frontPeek.x << " " << frontPeek.y << std::endl;
+
+    std::cout << "Dequeuing Coordinate (1,1)." << std::endl;
+    frontPop = queue->dequeue();
+    std::cout << "Dequeued Value: ";
+    std::cout << frontPop.x << " " << frontPop.y << std::endl;
+
+    for (int i = 0; i < 11; ++i)
+    {
+        queue->enqueue(Coordinate(i, i + 4));
+    }
+
+    for (int i = 0; i < 11; ++i)
+    {
+        std::cout << "Peeking at Coordinate (" << i << ',' << i + 4 << ')';
+        std::cout << std::endl;
+        frontPeek = queue->peek();
+        std::cout << "Peeked Value: ";
+        std::cout << frontPeek.x << " " << frontPeek.y << std::endl;
+
+        std::cout << "Dequeuing Coordinate (" << i << ',' << i + 4 << ')';
+        std::cout << std::endl;
+        frontPop = queue->dequeue();
+        std::cout << "Dequeued Value: ";
+        std::cout << frontPop.x << " " << frontPop.y << std::endl;
+    }
+
+    return true;
+}
+
+
+int main()
+{
+    
+    CoordinateQueue *queue = new CoordinateQueue();
+    CoordinateStack *stack = new CoordinateStack();
+
+    if (testStack(stack) && testQueue(queue))
+    {
+        std::cout << std::endl;
+        std::cout << std::endl;
+        std::cout << "All tests Passed" << std::endl;
+        
+    }
 
     delete queue;
     delete stack;

@@ -172,10 +172,7 @@ Coordinate CoordinateStack::do_pop()
 Coordinate CoordinateStack::peek()
 {
     if (!is_empty()) 
-    {
         return top->c;
-    }
-
     return Coordinate(-1, -1);
 }
 

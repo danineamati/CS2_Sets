@@ -71,7 +71,8 @@ CoordinateQueue::CoordinateQueue()
  */
 void CoordinateQueue::init()
 {
-   /* TODO: Write your initialization code here! */
+   front = nullptr;
+   rear = nullptr;
 }
 
 /**
@@ -87,7 +88,13 @@ CoordinateQueue::~CoordinateQueue()
  */
 void CoordinateQueue::deinit()
 {
-    /* TODO: Write your cleanup code here! */
+    while(!is_empty())
+    {
+        queueitem *queueNext = front->next;
+        queueitem *queueFront = front;
+        front = queueNext;
+        delete queueFront;
+    }
 }
 
 /**
@@ -115,7 +122,17 @@ void CoordinateQueue::enqueue(Coordinate c)
  */
 void CoordinateQueue::do_enqueue(Coordinate c)
 {
-    /* TODO: Write your enqueue operation here! */
+    queueitem *queueNext = new queueitem();
+    queueNext->c = c;
+    queueNext->next = nullptr;
+
+    if (!is_empty())
+        rear->next = queueNext;
+    else 
+    {
+        front = queueNext;
+    }
+    rear = queueNext;
 }
 
 /**
@@ -136,7 +153,14 @@ Coordinate CoordinateQueue::dequeue()
  */
 Coordinate CoordinateQueue::do_dequeue()
 {
-    /* TODO: Write your dequeue operation here! */
+    if (!is_empty())
+    {
+        Coordinate frontCoord = front->c;
+        queueitem *queuefront = front;
+        front = front->next;
+        delete queuefront;
+        return frontCoord;
+    }
     return Coordinate();
 }
 
@@ -148,8 +172,9 @@ Coordinate CoordinateQueue::do_dequeue()
  */
 Coordinate CoordinateQueue::peek()
 {
-    /* TODO: Write your peek code here! */
-    return Coordinate();
+    if (!is_empty())
+        return front->c;
+    return Coordinate(-1,-1);
 }
 
 /**
@@ -159,7 +184,8 @@ Coordinate CoordinateQueue::peek()
  */
 bool CoordinateQueue::is_empty()
 {
-    /* TODO: Is the queue empty??? */
-    return true;
+    if (front == nullptr)
+        return true;
+    return false;
 }
 

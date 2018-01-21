@@ -44,16 +44,29 @@
  */
 
 #include <cstdio>
+#include <iostream>
 #include "CoordinateStack.hpp"
 #include "CoordinateQueue.hpp"
 
 int main()
 {
-    Coordinate c;
+    Coordinate c = Coordinate(0,0);
     CoordinateQueue *queue = new CoordinateQueue();
     CoordinateStack *stack = new CoordinateStack();
 
-    /* TODO: Test all the things! */
+    std::cout << "Made the test" << std::endl;
+
+
+    stack->push(c);
+    Coordinate topPeek = stack->peek();
+    std::cout << topPeek.x << " " << topPeek.y << std::endl;
+
+    stack->push(Coordinate(1, 1));
+    topPeek = stack->peek();
+    std::cout << topPeek.x << " " << topPeek.y << std::endl;
+    Coordinate topPop = stack->pop();
+    std::cout << topPop.x << " " << topPop.y << std::endl;
+
 
     delete queue;
     delete stack;

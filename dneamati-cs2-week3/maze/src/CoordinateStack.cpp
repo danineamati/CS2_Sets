@@ -71,7 +71,7 @@ CoordinateStack::CoordinateStack()
  */
 void CoordinateStack::init()
 {
-    /* TODO: Write your initialization here! */
+    top = nullptr;
 }
 
 /**
@@ -87,7 +87,13 @@ CoordinateStack::~CoordinateStack()
  */
 void CoordinateStack::deinit()
 {
-    /* TODO: Write your cleanup code here! */
+    while(!is_empty())
+    {
+        stackitem *stacknext = top->next;
+        stackitem *stacktop = top;
+        top = stacknext;
+        delete stacktop;
+    }
 }
 
 /**
@@ -114,7 +120,10 @@ void CoordinateStack::push(Coordinate c)
  */
 void CoordinateStack::do_push(Coordinate c)
 {
-    /* TODO: Write your push function here! */
+    stackitem * stacknext = new stackitem();
+    stacknext->c = c;
+    stacknext->next = top;
+    top = stacknext;
 }
 
 /**
@@ -143,8 +152,16 @@ Coordinate CoordinateStack::pop()
  */
 Coordinate CoordinateStack::do_pop()
 {
-    /* TODO: Write your pop function here! */
-    return Coordinate();
+    if (!is_empty())
+    {
+        Coordinate topCoord = top->c;
+        stackitem *stacktop = top;
+        top = top->next;
+        delete stacktop;
+        return topCoord;
+    }
+
+    return Coordinate(-1, -1);
 }
 
 /**
@@ -154,8 +171,12 @@ Coordinate CoordinateStack::do_pop()
  */
 Coordinate CoordinateStack::peek()
 {
-    /* TODO: Write your peek function here! */
-    return Coordinate();
+    if (!is_empty()) 
+    {
+        return top->c;
+    }
+
+    return Coordinate(-1, -1);
 }
 
 /**
@@ -165,6 +186,7 @@ Coordinate CoordinateStack::peek()
  */
 bool CoordinateStack::is_empty()
 {
-    /* TODO: Is the stack empty??? */
-    return true;
+    if (top == nullptr)
+        return true;
+    return false;
 }

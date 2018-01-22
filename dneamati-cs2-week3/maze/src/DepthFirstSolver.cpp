@@ -61,7 +61,14 @@ DepthFirstSolver::DepthFirstSolver(class MazeSolverApp *app)
  */
 void DepthFirstSolver::init()
 {
-    /* TODO: Write your initialization code here! */
+    for (int i = 0; i < WIDTH; i++)
+    {
+        for (int j = 0; j < HEIGHT; j++)
+        {
+            // Set every cell to not visited
+            visited[i][j] = false;
+        }
+    }
 }
 
 /**
@@ -96,6 +103,66 @@ void DepthFirstSolver::solve(MazeGrid *maze)
      * track which cells you have already visited; you are responsible for
      * maintaining it, filling it with useful information, and using it
      * in a consistent way. */
+
+    // Push the start onto the stack
+    stack->push(Coordinate(MAZE_START_X, MAZE_START_Y));
+    
+
+    while(!stack->is_empty())
+    {
+        Coordinate current = stack->peek();
+
+        // Mark the current coordinate as Visited
+        visited[current.x][current.y] = true;
+
+        if (current.x == MAZE_END_X && current.y == MAZE_END_Y)
+        {
+            // Solve has reached the end!
+            break;
+        }
+
+        else
+        {
+            int potential = maze->get_possible_moves(current.x, current.y);
+
+            // Start with East since the general direction of the end
+            // is southeast.
+
+            // Check that East is an option and the cell is not visited
+            if (potential & E && !visited[current.x + 1][current.y]) 
+            {
+                /* We can move east from current.x to current.x + 1. */
+                stack->push(Coordinate(current.x + 1, current.y));
+            }
+
+            // If not, check South
+            else if (potential & S && !visited[current.x][current.y + 1]) 
+            {
+                /* We can move east from current.y to current.y + 1. */
+                stack->push(Coordinate(current.x, current.y + 1));
+            }
+
+            // If not, check West
+            else if (potential & W && !visited[current.x - 1][current.y]) 
+            {
+                /* We can move east from current.x to current.x - 1. */
+                stack->push(Coordinate(current.x - 1, current.y));
+            }
+
+            // If not, check North
+            else if (potential & N && !visited[current.x][current.y - 1])
+            {
+                /* We can move east from current.y to current.y - 1. */
+                stack->push(Coordinate(current.x, current.y - 1));
+            }
+
+            // If NO OPTIONS remain
+            else
+            {
+                stack->pop();
+            }
+        }
+    }
 }
 
 /**
@@ -105,11 +172,6 @@ void DepthFirstSolver::solve(MazeGrid *maze)
  */
 vector<Coordinate> DepthFirstSolver::get_path()
 {
-    vector<Coordinate> list;
-
-    /* TODO: Get the current path through the maze. For a DFS, this is quite
-     * easy: just get all the Coordinates on the stack. */
-
-    return list;
+    return stack->fullstack();
 }
 

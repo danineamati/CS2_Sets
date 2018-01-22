@@ -83,6 +83,7 @@ public:
     Coordinate pop();
     Coordinate peek();
     bool is_empty();
+    vector<Coordinate> fullstack();
 
 private:
     stackitem *top;

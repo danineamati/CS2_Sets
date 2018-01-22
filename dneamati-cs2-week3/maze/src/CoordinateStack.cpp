@@ -187,3 +187,28 @@ bool CoordinateStack::is_empty()
         return true;
     return false;
 }
+
+/**
+ * @brief Make a vector representation of the stack
+ * 
+ * @return: a vector of the current stack
+ */
+vector<Coordinate> CoordinateStack::fullstack()
+{
+    vector<Coordinate> path;
+
+    stackitem *current = top;
+
+    while (current->next != nullptr)
+    {
+        // Add the current stack item's coordinate to the vector
+        path.push_back(current->c);
+
+        // Choose the next stack item to add
+        current = current->next;
+    }
+
+    path.push_back(current->c);
+
+    return path;
+}

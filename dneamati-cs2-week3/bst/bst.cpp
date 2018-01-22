@@ -18,6 +18,11 @@ struct Node
         right = nullptr;
     }
 
+    ~Node()
+    {
+        // Taken care of in Binary Tree
+    }
+
     /** @brief Inserts an integer into the subtree rooted at this node.
 
     Does not allow duplicate entries.
@@ -72,7 +77,6 @@ struct Node
         {
             if(left == nullptr)
             {
-                left = new Node(val);
                 return false;
             }
             else
@@ -104,6 +108,43 @@ public:
         root = nullptr;
     }
 
+    ~BinarySearchTree()
+    {
+        destroy(root);
+    }
+
+    /** @brief A helper function that traverses the tree an deletes
+    its end points.
+
+    @ return None
+
+    */
+    void destroy(Node * current)
+    {
+        // Base Case: If at end of branch, destroy node
+        if (current->left == nullptr && current->right == nullptr)
+        {
+            delete current;
+            return;
+        }
+
+        // If Left is not nullptr, try to delete node
+        if (current->left != nullptr)
+        {
+            destroy(current->left);
+            current->left = nullptr;
+        }
+
+        // If Right is not nullptr, try to delete node
+        if (current->right != nullptr)
+        {
+            destroy(current->right);
+            current->right = nullptr;
+        }
+
+        delete current;
+    }
+
     /** @brief Inserts an integer into this tree.
 
     Does not allow duplicate entries.
@@ -113,6 +154,12 @@ public:
     */
     bool insert(int val)
     {
+        if (root == nullptr)
+        {
+            root = new Node(val);
+            return true;
+        }
+
         return root->insert(val);
     }
 
@@ -158,7 +205,7 @@ int main(int argc, char ** argv)
     {
         if(b.find(j))
         {
-            cout << j;
+            cout << j << " ";
         }
     }
 

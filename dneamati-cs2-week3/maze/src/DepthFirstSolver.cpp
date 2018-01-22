@@ -86,10 +86,7 @@ DepthFirstSolver::~DepthFirstSolver()
  */
 void DepthFirstSolver::deinit()
 {
-    for (int i = WIDTH - 1; i = 0; i--)
-    {
-        delete[] visited[i];
-    }
+    
 }
 
 /**

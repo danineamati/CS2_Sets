@@ -66,11 +66,7 @@ void BreadthFirstSolver::init()
         for (int j = 0; j < HEIGHT; j++)
         {
             // Set every cell to not visited
-            vitem cell;
-            cell.visited = false;
-            cell.from = Coordinate(-1, -1); // Dummy Value
-
-            visited[i][j] = cell;
+            visited[i][j].visited = false;
         }
     }
 }
@@ -115,6 +111,7 @@ void BreadthFirstSolver::solve(MazeGrid *maze)
     while(!queue->is_empty())
     {
         Coordinate current = queue->peek();
+        cout << current.x << ' ' << current.y << endl;
 
         // Mark the current coordinate as Visited
         visited[current.x][current.y].visited = true;
@@ -136,30 +133,35 @@ void BreadthFirstSolver::solve(MazeGrid *maze)
             if (potential & E && !visited[current.x + 1][current.y].visited) 
             {
                 /* We can move east from current.x to current.x + 1. */
+                visited[current.x + 1][current.y].from = current;
                 queue->enqueue(Coordinate(current.x + 1, current.y));
             }
 
-            // If not, check South
-            else if (potential & S && !visited[current.x][current.y + 1].visited) 
+            // Check South
+            if (potential & S && !visited[current.x][current.y + 1].visited) 
             {
                 /* We can move east from current.y to current.y + 1. */
+                visited[current.x][current.y + 1].from = current;
                 queue->enqueue(Coordinate(current.x, current.y + 1));
             }
 
-            // If not, check West
-            else if (potential & W && !visited[current.x - 1][current.y].visited) 
+            // Check West
+            if (potential & W && !visited[current.x - 1][current.y].visited) 
             {
                 /* We can move east from current.x to current.x - 1. */
+                visited[current.x - 1][current.y].from = current;
                 queue->enqueue(Coordinate(current.x - 1, current.y));
             }
 
-            // If not, check North
-            else if (potential & N && !visited[current.x][current.y - 1].visited)
+            // Check North
+            if (potential & N && !visited[current.x][current.y - 1].visited)
             {
                 /* We can move east from current.y to current.y - 1. */
+                visited[current.x][current.y - 1].from = current;
                 queue->enqueue(Coordinate(current.x, current.y - 1));
             }
         }
+        queue->dequeue();
     }
 }
 
@@ -176,8 +178,18 @@ vector<Coordinate> BreadthFirstSolver::get_path()
      * For a BFS, this is a little tricky -- the top element in the queue
      * only tells you the last point in the path; you need to trace back up
      * using the `visited` member array. */
+    //cout << lastVisited.from.x << ' ' << lastVisited.from.y << endl;
 
-    
+    Coordinate next = queue->peek();
+
+    while (next.x != MAZE_START_X || next.y != MAZE_START_Y)
+    {
+        // Add the next cell to the vector
+        list.push_back(next);
+        next = visited[next.x][next.y].from;
+    }
+
+    list.push_back(next);
 
     return list;
 }

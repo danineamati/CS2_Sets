@@ -86,7 +86,10 @@ DepthFirstSolver::~DepthFirstSolver()
  */
 void DepthFirstSolver::deinit()
 {
-    /* TODO: Write your cleanup code here! */
+    for (int i = WIDTH - 1; i = 0; i--)
+    {
+        delete[] visited[i];
+    }
 }
 
 /**
@@ -97,13 +100,6 @@ void DepthFirstSolver::deinit()
  */
 void DepthFirstSolver::solve(MazeGrid *maze)
 {
-    /* TODO: Solve the maze.
-     *
-     * You are provided a `visited` member variable that you can use to
-     * track which cells you have already visited; you are responsible for
-     * maintaining it, filling it with useful information, and using it
-     * in a consistent way. */
-
     // Push the start onto the stack
     stack->push(Coordinate(MAZE_START_X, MAZE_START_Y));
     

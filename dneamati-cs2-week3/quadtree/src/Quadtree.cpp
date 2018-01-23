@@ -83,8 +83,7 @@ void Quadtree::Insert(coordinate *c)
  */
 vector<rect*> Quadtree::ListRectangles()
 {
-    vector<rect*> ret;
-    return ret;
+    return root->ListRectangles();
 }
 
 
@@ -96,8 +95,7 @@ vector<rect*> Quadtree::ListRectangles()
  */
 vector<coordinate*> Quadtree::ListPoints()
 {
-    vector<coordinate*> ret;
-    return ret;
+    return root->ListPoints();
 }
 
 

@@ -99,6 +99,69 @@ rect *QuadtreeNode::NodeRect()
 
 
 /**
+ * @brief Adds four children to the node
+ */
+void QuadtreeNode::AddChildren()
+{
+    // If the new node is top left, the upper left
+    // corner is the same value
+    topLeft = new QuadtreeNode(size / 2,
+        new coordinate(box->ul->x, box->ul->y));
+
+    // If the new node is the top right, the upper left
+    // corner has shifted by the length of the quadrant's
+    // size.
+    topRight = new QuadtreeNode(size / 2, 
+        new coordinate(box->ul->x + size / 2, box->ul->y));
+
+    // If the new node is the bottom left, the upper left
+    // corner has shifter by the length of the quadrant's
+    // size in y.
+    bottomLeft = new QuadtreeNode(size / 2, 
+        new coordinate(box->ul->x, box->ul->y + size / 2));
+
+    // If the new node is the bottom right, the upper left
+    // is now the center.
+    bottomRight = new QuadtreeNode(size / 2, 
+        new coordinate(box->ul->x + size / 2, box->ul->y + size / 2));
+
+}
+
+/**
+ * @brief Determines which child should inherit the current coord
+ */
+void QuadtreeNode::Inherit(coordinate *gene)
+{
+    // Check Top Left
+    if (box->ul->x + size / 2 >= gene->x && 
+        box->ul->y + size / 2 >= gene->y)
+    {
+        topLeft->Insert(gene);
+    }
+
+    // Check Top Right
+    else if (box->ul->x + size / 2 < gene->x &&
+        box->ul->y + size / 2 >= gene->y)
+    {
+        topRight->Insert(gene);
+    }
+
+    // Check Bottom Left
+    else if (box->ul->x + size / 2 >= gene->x && 
+        box->ul->y + size / 2 < gene->y)
+    {
+        bottomLeft->Insert(gene);
+    }
+
+    // Check Bottom Right
+    else if (box->ul->x + size /2 < gene->x &&
+        box->ul->y + size / 2 < gene->y)
+    {
+        bottomRight->Insert(gene);
+    }
+}
+
+/**
  * @brief Inserts a point into the quadtree.
  *
  * @param c The point to insert.
@@ -112,47 +175,10 @@ void QuadtreeNode::Insert(coordinate *c)
 
     else
     {
-        // Consider the top left
-        if (c->x <= coord->x && c.y <= coord.y)
-        {
-            // If the new node is top left, the upper left
-            // corner is the same value
-            QuadtreeNode *tl = new QuadtreeNode(size / 2,
-                new coordinate(box->ul.x, box->ul.y));
-            tl.insert(c);
-        }
-
-        // Consider the top right
-        else if (c->x > coord->x && c->y <= coord.y)
-        {
-            // If the new node is the top right, the upper left
-            // corner has shifted by the length of the quadrant's
-            // size.
-            QuadtreeNode *tr = new QuadtreeNode(size / 2, 
-                new coordinate(box->ul.x + size/2, box->ul.y));
-            tr.insert(c);
-        }
-
-        // Consider the bottom left
-        else if (c->x <= coord->x && c->y > coord.y)
-        {
-            // If the new node is the bottom left, the upper left
-            // corner has shifter by the length of the quadrant's
-            // size in y.
-            QuadtreeNode *bl = new QuadtreeNode(size / 2, 
-                new coordinate(box->ul.x, box->ul.y + size/2));
-            bl.insert(c);
-        }
-
-        // Consider the bottom right
-        else if (c->x > coord->x && c->y > coord.y)
-        {
-            // If the new node is the bottom right, the upper left
-            // is now the center.
-            QuadtreeNode *br = new QuadtreeNode(size / 2, 
-                new coordinate(box->ul.x + size/2, box->ul.y + size/2));
-            br.insert(c);
-        }
+        AddChildren();
+        Inherit(coord);
+        coord = nullptr;
+        Inherit(c);
     }
 }
 
@@ -167,6 +193,45 @@ vector<rect*> QuadtreeNode::ListRectangles()
 {
     vector<rect*> boxes;
 
+    boxes.push_back(box);
+
+    if (topLeft != nullptr)
+    {
+        vector<rect*> all_boxes = topLeft->ListRectangles();
+        for (size_t i = 0; i < all_boxes.size(); i++)
+        {
+            boxes.push_back(all_boxes[i]);
+        }
+    }
+
+    if (topRight != nullptr)
+    {
+        vector<rect*> all_boxes = topRight->ListRectangles();
+        for (size_t i = 0; i < all_boxes.size(); i++)
+        {
+            boxes.push_back(all_boxes[i]);
+        }
+    }
+
+    if (bottomLeft != nullptr)
+    {
+        vector<rect*> all_boxes = bottomLeft->ListRectangles();
+        for (size_t i = 0; i < all_boxes.size(); i++)
+        {
+            boxes.push_back(all_boxes[i]);
+        }
+    }
+
+    if (bottomRight != nullptr)
+    {
+        vector<rect*> all_boxes = bottomRight->ListRectangles();
+        for (size_t i = 0; i < all_boxes.size(); i++)
+        {
+            boxes.push_back(all_boxes[i]);
+        }
+    }
+
+
     return boxes;
 }
 
@@ -180,6 +245,50 @@ vector<rect*> QuadtreeNode::ListRectangles()
 vector<coordinate*> QuadtreeNode::ListPoints()
 {
     vector<coordinate*> points;
+
+    if (coord != nullptr)
+    {
+        points.push_back(coord);
+    }
+
+    else
+    {
+        if (topLeft != nullptr)
+        {
+            vector<coordinate*> all_points = topLeft->ListPoints();
+            for (size_t i = 0; i < all_points.size(); i++)
+            {
+                points.push_back(all_points[i]);
+            }
+        }
+
+        if (topRight != nullptr)
+        {
+            vector<coordinate*> all_points = topRight->ListPoints();
+            for (size_t i = 0; i < all_points.size(); i++)
+            {
+                points.push_back(all_points[i]);
+            }
+        }
+
+        if (bottomLeft != nullptr)
+        {
+            vector<coordinate*> all_points = bottomLeft->ListPoints();
+            for (size_t i = 0; i < all_points.size(); i++)
+            {
+                points.push_back(all_points[i]);
+            }
+        }
+
+        if (bottomRight != nullptr)
+        {
+            vector<coordinate*> all_points = bottomRight->ListPoints();
+            for (size_t i = 0; i < all_points.size(); i++)
+            {
+                points.push_back(all_points[i]);
+            }
+        }
+    }
 
     return points;
 }

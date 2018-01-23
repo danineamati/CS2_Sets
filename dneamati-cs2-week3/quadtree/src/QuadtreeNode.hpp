@@ -62,6 +62,8 @@ public:
     ~QuadtreeNode();
 
     rect *NodeRect();
+    void AddChildren();
+    void Inherit(coordinate *gene);
     void Insert(coordinate *c);
     vector<rect*> ListRectangles();
     vector<coordinate*> ListPoints();

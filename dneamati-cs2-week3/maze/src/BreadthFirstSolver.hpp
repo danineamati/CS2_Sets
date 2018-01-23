@@ -43,6 +43,10 @@
  *
  */
 
+/**
+ * Daniel Neamati
+ */
+
 #ifndef __BREADTHFIRSTSOLVER_H__
 #define __BREADTHFIRSTSOLVER_H__
 

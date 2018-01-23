@@ -43,6 +43,11 @@
  *
  */
 
+/**
+ * Daniel Neamati
+ */
+
+
 #include "DepthFirstSolver.hpp"
 
 /**
@@ -86,7 +91,7 @@ DepthFirstSolver::~DepthFirstSolver()
  */
 void DepthFirstSolver::deinit()
 {
-    
+    // No Dynamically allocated memory
 }
 
 /**

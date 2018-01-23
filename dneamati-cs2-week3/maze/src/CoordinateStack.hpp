@@ -43,6 +43,11 @@
  *
  */
 
+/**
+ * Daniel Neamati
+ */
+
+
 #ifndef __COORDINATESTACK_H__
 #define __COORDINATESTACK_H__
 

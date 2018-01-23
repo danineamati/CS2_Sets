@@ -43,11 +43,17 @@
  *
  */
 
+/**
+ * Daniel Neamati
+ */
+
+
 #ifndef __QUADTREENODE_H__
 #define __QUADTREENODE_H__
 
 #include <vector>
 #include <stdlib.h>
+#include <iostream>
 #include "structs.hpp"
 
 using namespace std;

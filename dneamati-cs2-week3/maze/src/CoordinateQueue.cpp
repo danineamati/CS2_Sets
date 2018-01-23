@@ -43,6 +43,11 @@
  *
  */
 
+/**
+ * Daniel Neamati
+ */
+
+
 #include "CoordinateQueue.hpp"
 
 #define ANIMATION_DELAY     (25)

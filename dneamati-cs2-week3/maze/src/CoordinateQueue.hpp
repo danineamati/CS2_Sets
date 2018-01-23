@@ -43,6 +43,11 @@
  *
  */
 
+/**
+ * Daniel Neamati
+ */
+
+
 #ifndef __COORDINATEQUEUE_H__
 #define __COORDINATEQUEUE_H__
 

@@ -43,6 +43,11 @@
  *
  */
 
+/**
+ * Daniel Neamati
+ */
+
+
 #ifndef __DEPTHFIRSTSOLVER_H__
 #define __DEPTHFIRSTSOLVER_H__
 

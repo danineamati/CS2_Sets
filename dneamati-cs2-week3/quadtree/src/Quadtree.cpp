@@ -43,6 +43,12 @@
  *
  */
 
+
+/**
+ * Daniel Neamati
+ */
+
+
 #include "Quadtree.hpp"
 
 
@@ -112,10 +118,5 @@ vector<coordinate*> Quadtree::ListPoints()
  */
 query *Quadtree::Query(coordinate *center, float radius)
 {
-    vector<coordinate*> points;
-    vector<rect*> boxes;
-
-    query *q = new query(points, boxes);
-
-    return q;
+    return root->Query(center, radius);
 }

@@ -43,6 +43,11 @@
  *
  */
 
+/**
+ * Daniel Neamati
+ */
+
+
 #include "CoordinateStack.hpp"
 
 #define ANIMATION_DELAY     (25)

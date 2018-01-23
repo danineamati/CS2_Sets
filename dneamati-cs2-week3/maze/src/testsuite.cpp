@@ -43,6 +43,10 @@
  *
  */
 
+/**
+ * Daniel Neamati
+ */
+
 #include <cstdio>
 #include <iostream>
 #include "CoordinateStack.hpp"

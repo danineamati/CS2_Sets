@@ -43,6 +43,11 @@
  *
  */
 
+/**
+ * Daniel Neamati
+ */
+
+
 #include "QuadtreeNode.hpp"
 
 
@@ -168,16 +173,27 @@ void QuadtreeNode::Inherit(coordinate *gene)
  */
 void QuadtreeNode::Insert(coordinate *c)
 {
-    if (coord == nullptr) // The node does not yet contain a point
+    // Check if has children
+    // Note you either have four children or no children
+    if (topLeft == nullptr)
     {
-        coord = c;
+        // The node does not yet contain a point
+        if (coord == nullptr)
+        {
+            coord = c;
+        }
+
+        else
+        {
+            AddChildren();
+            Inherit(coord);
+            coord = nullptr;
+            Inherit(c);
+        }
     }
 
     else
     {
-        AddChildren();
-        Inherit(coord);
-        coord = nullptr;
         Inherit(c);
     }
 }
@@ -309,6 +325,103 @@ query *QuadtreeNode::Query(coordinate *center, float radius)
 {
     vector<coordinate*> points;
     vector<rect*> boxes;
+
+    // Check if the current node does not have any points
+    if (coord == nullptr && topLeft == nullptr)
+    {
+        // Check if box fits in query area
+        if (box->ul->x >= center->x - radius 
+            && box->ul->x <= center->x + radius 
+            && box->ul->y >= center->y - radius 
+            && box->ul->y <= center->y + radius)
+        {
+            boxes.push_back(box); // No point just box
+        }
+    }
+
+    // Check if you are a leaf and you have a point
+    else if (coord != nullptr && topLeft == nullptr)
+    {
+        // Check if box fits in query area
+        if (box->ul->x >= center->x - radius 
+            && box->ul->x <= center->x + radius 
+            && box->ul->y >= center->y - radius 
+            && box->ul->y <= center->y + radius)
+        {
+            points.push_back(coord);
+            boxes.push_back(box);
+        }
+
+        // Note that if the box does not fit, the point may
+        // still fit
+        if (coord->x >= center->x - radius 
+            && coord->x <= center->x + radius 
+            && coord->y >= center->y - radius 
+            && coord->y <= center->y + radius)
+        {
+            points.push_back(coord);
+        }
+    }
+
+    // Otherwise, you must be a parent
+    else
+    {
+        // Check the top left child
+        query *searchedTL = topLeft->Query(center, radius);
+        vector<coordinate*> all_points = searchedTL->points;
+        for (size_t i = 0; i < all_points.size(); i++)
+        {
+            points.push_back(all_points[i]);
+        }
+
+        vector<rect*> all_boxes = searchedTL->boxes;
+        for (size_t i = 0; i < all_boxes.size(); i++)
+        {
+            boxes.push_back(all_boxes[i]);
+        }
+
+        // Check the top right child
+        query *searchedTR = topRight->Query(center, radius);
+        all_points = searchedTR->points;
+        for (size_t i = 0; i < all_points.size(); i++)
+        {
+            points.push_back(all_points[i]);
+        }
+
+        all_boxes = searchedTR->boxes;
+        for (size_t i = 0; i < all_boxes.size(); i++)
+        {
+            boxes.push_back(all_boxes[i]);
+        }
+
+        // Check the bottom left child
+        query *searchedBL = bottomLeft->Query(center, radius);
+        all_points = searchedBL->points;
+        for (size_t i = 0; i < all_points.size(); i++)
+        {
+            points.push_back(all_points[i]);
+        }
+
+        all_boxes = searchedBL->boxes;
+        for (size_t i = 0; i < all_boxes.size(); i++)
+        {
+            boxes.push_back(all_boxes[i]);
+        }
+
+        // Check the bottom right child
+        query *searchedBR = bottomRight->Query(center, radius);
+        all_points = searchedBR->points;
+        for (size_t i = 0; i < all_points.size(); i++)
+        {
+            points.push_back(all_points[i]);
+        }
+
+        all_boxes = searchedBR->boxes;
+        for (size_t i = 0; i < all_boxes.size(); i++)
+        {
+            boxes.push_back(all_boxes[i]);
+        }
+    }
 
     query *ret = new query(points, boxes);
     return ret;

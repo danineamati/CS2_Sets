@@ -37,7 +37,9 @@ News feed.
 When you load a news feed, it shows the most recent news article/post/etc first. 
 This news article/post/etc is the last element added to the "news stack." 
 After an item is viewed, it notes that you have viewed the item (essentially
-popping the item from your screen) and displays the next item. 
+popping the item from your screen) and displays the next item in the "news stack."
+Hence the news feed is a "Last In, First Out" data structure, specifically a stack,
+where old elements get buried in the bottom of the stack. 
 
 
 Real-life Queue
@@ -46,7 +48,8 @@ Amazon and online shopping.
 Say you have a sale on an online website. The first person to click the "Buy" button
 must be the first person to acquire the purchase. This is to say the data structure
 is "First in, first out" - a queue. This is particularly noticable in the limiting
-case that a supply is in short stock. In this case the last person to "Buy" the item
-may not get the item since he or she is at the end of the queue.
+case that a supply is in short stock. In this case, the last person to "Buy" the item
+may not get the item (if the item goes out of stock) since he or she is at the end 
+of the queue.
 
 

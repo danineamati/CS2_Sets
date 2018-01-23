@@ -1,5 +1,23 @@
+# Ignore Binary Files #
+#######################
+*
+!*.*
+!*/
+
 # Complied source files #
 #########################
 
 *.exe
 *.o
+
+
+# Submitted Zip Files #
+#######################
+
+*.zip
+
+
+# Copied Folders #
+#################
+
+*(copy)/

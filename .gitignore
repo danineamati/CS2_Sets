@@ -1,0 +1,5 @@
+# Complied source files #
+#########################
+
+*.exe
+*.o

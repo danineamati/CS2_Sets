@@ -71,7 +71,7 @@ Quadtree::~Quadtree()
  */
 void Quadtree::Insert(coordinate *c)
 {
-
+    root->Insert(c);
 }
 
 

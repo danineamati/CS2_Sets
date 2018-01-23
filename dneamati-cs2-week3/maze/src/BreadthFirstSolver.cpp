@@ -111,7 +111,6 @@ void BreadthFirstSolver::solve(MazeGrid *maze)
     while(!queue->is_empty())
     {
         Coordinate current = queue->peek();
-        cout << current.x << ' ' << current.y << endl;
 
         // Mark the current coordinate as Visited
         visited[current.x][current.y].visited = true;

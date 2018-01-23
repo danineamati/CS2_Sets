@@ -61,6 +61,12 @@ QuadtreeNode::QuadtreeNode(float size, coordinate *ul)
 
     coordinate *br = new coordinate(ul->x + size, ul->y + size);
     this->box = new rect(ul, br);
+
+    coord = nullptr;
+    topLeft = nullptr;
+    topRight = nullptr;
+    bottomLeft = nullptr;
+    bottomRight = nullptr;
 }
 
 
@@ -75,6 +81,9 @@ QuadtreeNode::~QuadtreeNode()
         delete box->br;
         delete box;
     }
+
+    if (coord != nullptr) // Coord is dynamically allocated
+        delete coord;
 }
 
 
@@ -96,7 +105,55 @@ rect *QuadtreeNode::NodeRect()
  */
 void QuadtreeNode::Insert(coordinate *c)
 {
+    if (coord == nullptr) // The node does not yet contain a point
+    {
+        coord = c;
+    }
 
+    else
+    {
+        // Consider the top left
+        if (c->x <= coord->x && c.y <= coord.y)
+        {
+            // If the new node is top left, the upper left
+            // corner is the same value
+            QuadtreeNode *tl = new QuadtreeNode(size / 2,
+                new coordinate(box->ul.x, box->ul.y));
+            tl.insert(c);
+        }
+
+        // Consider the top right
+        else if (c->x > coord->x && c->y <= coord.y)
+        {
+            // If the new node is the top right, the upper left
+            // corner has shifted by the length of the quadrant's
+            // size.
+            QuadtreeNode *tr = new QuadtreeNode(size / 2, 
+                new coordinate(box->ul.x + size/2, box->ul.y));
+            tr.insert(c);
+        }
+
+        // Consider the bottom left
+        else if (c->x <= coord->x && c->y > coord.y)
+        {
+            // If the new node is the bottom left, the upper left
+            // corner has shifter by the length of the quadrant's
+            // size in y.
+            QuadtreeNode *bl = new QuadtreeNode(size / 2, 
+                new coordinate(box->ul.x, box->ul.y + size/2));
+            bl.insert(c);
+        }
+
+        // Consider the bottom right
+        else if (c->x > coord->x && c->y > coord.y)
+        {
+            // If the new node is the bottom right, the upper left
+            // is now the center.
+            QuadtreeNode *br = new QuadtreeNode(size / 2, 
+                new coordinate(box->ul.x + size/2, box->ul.y + size/2));
+            br.insert(c);
+        }
+    }
 }
 
 

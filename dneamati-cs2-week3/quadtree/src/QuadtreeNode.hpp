@@ -70,6 +70,13 @@ public:
 private:
     float size;
     rect *box;
+    coordinate *coord;
+
+    // Now we include the possible children of the node
+    QuadtreeNode *topLeft;
+    QuadtreeNode *topRight;
+    QuadtreeNode *bottomLeft;
+    QuadtreeNode *bottomRight;
 };
 
 #endif

@@ -38,6 +38,48 @@ struct align_result {
 typedef unordered_map<string, align_result> memo_type;
 
 /**
+ * @brief Calculates max of three align results
+ */
+align_result maxAlign(align_result gapS, align_result gapT, align_result same){
+    align_result best = gapS;
+    if (gapT.score > best.score)
+        best = gapT;
+    if (same.score > best.score)
+        best = same;
+    return best;
+}
+
+
+/**
+ * @brief Determines a match between two characters.
+ */
+align_result match(char s1, char t1) {
+    align_result match;
+
+    if (s1 == t1 && s1 != '-') { // Match achieved 
+        match.score = MATCHING;
+        match.inst = '|';
+        return match;
+    }
+    else if (s1 == '-') {
+        match.score = GAP_SCORE;
+        match.inst = 't';
+        return match;
+    }
+    else if (t1 == '-') {
+        match.score = GAP_SCORE;
+        match.inst = 's';
+        return match;
+    }
+    else {
+        match.score = MISMATCH;
+        match.inst = '*';
+        return match;
+    }
+}
+
+
+/**
  * @brief Function takes two strings, s and t, and produces an align_result
  * of the highest alignment score and its corresponding instruction str.
  */
@@ -48,16 +90,51 @@ align_result align(string s, string t, memo_type &memo) {
       return memo[key];
     }
 
-    /*
-      TODO: calculate the highest score for an alignment of s and t
-      - Base cases: s or t is empty
-      - Recursive calls
-     */
+    align_result answer;
+
+    // Base Case: s or t is empty
+    if (s.empty() && !t.empty()) // s is empty but not t
+    {
+        answer.score = -5;
+        answer.inst = 't';
+        return answer;
+    }
+    else if (t.empty() && !s.empty()) // t is empty but not s
+    {
+        answer.score = -5;
+        answer.inst = 's';
+        return answer;
+    }
+    else if (t.empty() && s.empty()) // Both are empty
+    {
+        return answer;
+    }
+
+    // Case 1: Gap in s, start of t
+    align_result gapS = align(s, t.substr(1, t.size()), memo);
+    align_result matchGapS = match('-', t[0]);
+    gapS.score = matchGapS.score + gapS.score;
+    gapS.inst = matchGapS.inst + gapS.inst;
+
+    // Case 2: Start of s, gap in t
+    align_result gapT = align(s.substr(1, s.size()), t, memo);
+    align_result matchGapT = match(s[0], '-');
+    gapT.score = matchGapT.score + gapT.score;
+    gapT.inst = matchGapT.inst + gapT.inst;
+
+    // Case 3: Start of s and start of t
+    align_result same = 
+    align(s.substr(1, s.size()), t.substr(1, t.size()), memo);
+    align_result matchSame = match(s[0], t[0]);
+    same.score = matchSame.score + same.score;
+    same.inst = matchSame.inst + same.inst;
+
+    answer = maxAlign(gapT, gapS, same);
 
     /* Before you return your calculated  align_result object,
        memoize it like so:*/
-    align_result answer;
     memo[key] = answer;
+
     return answer;
 }
 
@@ -84,6 +161,8 @@ void DNA_align(string s, string t) {
 
     int j = 0;      // running index in s
     int k = 0;      // running index in t
+
+    cout << endl;
 
     for (unsigned int m = 0; m < ans.length(); m++) {
         // i is the next element in our instruction string ans
@@ -130,5 +209,9 @@ int main(){
     DNA_align("b",  "ba");
     DNA_align("ab", "ba");
     DNA_align("ab", "b");
+    DNA_align("abc", "ac");
+    DNA_align("abc", "adc");
+    DNA_align("ACTGGCCGT", "TGACGTAA");
+    DNA_align("abracadabra", "avada kedavra");
     return 0;
 }

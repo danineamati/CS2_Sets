@@ -1,0 +1,37 @@
+
+Daniel Neamati
+CS2
+
+How does the DNA Alignment work?
+
+We need to consider the match of the DNA string as it compares to the match of the DNA string with a gap. To do this we do the following:
+
+Consider two strings: str1 and str2
+
+1) We can shift str1 to the right by one (add a gap) and then recursively check the alignment of the shifted str1 and the remaining (n-1) elements of str2. We also need the add the match of a gap and the first element of str2.
+
+2) We can also do the reverse. We can shift str2 by one (add a gap) and then recursively check the shifted str2 with (n-1) elements of str1. Now we add the match the gap in str2 with the first element of str1.
+
+3) Lastly, we have the most simple case, consider the match of the first elements of each string with the (n-1) elements of the each string. 
+
+
+
+Simply: This considers the full string, then (n-1) elements of the strings, then (n-2) elements, this continues until we have at least one string that is empty (base case). Now though we need to realize that we need to consider three base cases:
+
+1) str1 is empty, but str2 is not empty -> We need to score it as a gap and then add an 's'
+
+2) str2 is empty, but str1 is not empty -> We need to score it as a gap and then add a 't'
+
+3) both are empty. At this point the alignment simply returns. 
+
+
+However, the problem is that there are many strings that we would have to compute all over again. To prevent this we can record the string and the best alignment result in the memoization table whenever the alignment function is called.
+
+
+Info on my implementation:
+
+Max Align considers the three cases (first three presented) and choses the best of the three.
+
+Match considers the two characters and checks if they match, mismatch, or have a gap.
+
+Align considers two strings and structures the alignment algorithm detailed above.

@@ -213,5 +213,69 @@ int main(){
     DNA_align("abc", "adc");
     DNA_align("ACTGGCCGT", "TGACGTAA");
     DNA_align("abracadabra", "avada kedavra");
+
+    string virusBAN15807;
+    virusBAN15807 += (string) "aaatatattc aatatggaaa gaataaaaga actaagagat" +
+    (string) "ttaatgtcac agtctcgcac" +
+    (string) "tcgcgagata ctgacaaaaa ccactgtgga ccatatggcc ataatcaaga aatatacatc " +
+    "gggaaggcag gagaagaatc ctgcccttag gatgaaatgg atgatggcaa tgaaatatcc " +
+    "aattacagca gacaaaagga taatggagat gatcccggaa aggaatgagc aaggtcagac " +
+    "cctttggagc aagacaaatg atgctggatc agacagagtg atggtatcac ctctggctgt " +
+    "gacgtggtgg aacagaaatg gaccaacgac aagtacagtc cattatccaa aggtctataa " +
+    "aaactatttt gaaaaggtcg aaaggctaaa acatggaacc ttcggccccg ttcacttccg " +
+    "aaaccaggtt aaaatacgcc gcagggttga cataaaccca ggccatgcag atcttaatgc " +
+    "taaagaagca caagatgtca taatggagat cgtattccca aacgaagttg gagccaggat " +
+    "attgacatca gagtcacagt taactataac aaaggaaaag aaggaagagc tacaggactg " +
+    "caaaattgcc cctttgatgg tggcatacat gttggagaga gaactggttc gcaaaaccag " +
+    "attcctacca gtagttggcg ggacaagcag tgtgtatatc gaagtgttgc atttgaccca " +
+    "agggacctgc tgggagcaaa tgtacacacc gggaggggaa gtgagaaatg atgacgttga " +
+    "tcagagttta attatcgctg ctagaaatat tgttagaaga gcaacagtat cagcagaccc " +
+    "gctggcttcg ctcttggaga tgtgccatag tacacaaatt ggcgggataa ggatggtgga " +
+    "catccttaga caaaacccaa cagaagaaca agctgtggat atatgcaaag cagcaatggg " +
+    "tctaaggatc agttcatcct tcagctttgg aggattcact ttcaaaagga caagtggatc " +
+    "atctgtcaaa agggaggaag aaatgctcac cggcaacctt caaacattga aaataagagt " +
+    "acatgaagga tatgaggaat tcacaatggt cgggcgaaga gcaacagcca ttctaaggaa " +
+    "ggcaaccaga agactgatcc aactgatagt gagtgggaaa gacgagcaat caatcgccga " +
+    "ggcaatcata gtggcaatgg tgttttcaca agaggattgc atgataaagg cagtaagagg " +
+    "tgatttgaat tttgtcaaca gagcgaacca gcggctaaat cctatgcatc aactcctgag " +
+    "gcatttccaa aaggatgcaa aggtgctgtt ccaaaactgg ggaattgaac ccattgacaa " +
+    "tgtaatgggg atgatcggaa tattgcctga catgaccccc agcacagaga tgtcattgag " +
+    "aggagtgaga gtcagtaaaa tgggagtaga tgaatattcc agtactgaga aagtggttgt " +
+    "gagtattgat cgcttcttga gggtccggga ccagagggga aacgtactcc tgtctcctga " +
+    "agaggttagt gaaacacagg gtacagagaa gctgacgata acttattcat cgtccatgat " +
+    "gtgggaaatc aacggtccgg aatcagtgct agtcaacaca tatcaatgga tcattagaaa " +
+    "ttgggaaact gtgaagattc aatggtccca agaccctaca atgctttaca ataagatgga " +
+    "gtttgaaccc tttcaatccc tagtgcctaa ggctgccaga ggccaatata gtggatttgt " +
+    "aaggatgcta ttccagcaga tgcgtgatgt gctggggaca tttgacactg tccaaataat " +
+    "aaagctatta ccatttgcag cagccccacc ggagcagagc aggatgcagt tctcttctct " +
+    "aactgtgaat gtgaggggtt caggaatgag aatacttgtg agaggcaatt ctcctgtgtt " +
+    "caactacaac aaggcaacca agaggcttac agtacttgga aaggatgcag gtgcattgat " +
+    "ggaagaccca gatgagggaa cagcaggagt ggaatctgcg gtattgagag gatttctgat " +
+    "cctaggcaaa gaagacaaaa gatatgggcc agcattgagc atcaacgaat tgagcaatct " +
+    "tgcgagaggg gagaaggcta atgtgctgat agggcaagga gacgtggtgt tggtaatgaa " +
+    "acgaaaacgg gactctagca tacttactga cagccagaca gcgaccaaaa ggattcggat " +
+    (string) "ggccatcaat tagtgttgaa ttgtttaaa";
+
+    string virusBAN15814 = (string) "acaaaaacat aatggattcc aacactgtgt " +
+    (string) "caagcttcca ggtagactgc tttctttggc" +
+    (string) "atgtccgcaa acgatttgca gaccaagaac tgggtgatgc cccatttcta gatcggcttc " +
+    "gccgagatca gaagtccctg agaggaagaa gcagcactct tggtctggac atcagaactg " +
+    "ctactcgtga aggaaagcat atagtggaac ggattttaga ggacgagtca gatgaagcat " +
+    "ttaaaatgag tattgcttca gtgccagctc cacgctatct aactgacatg actcttgaag " +
+    "aaatgtcaag agattggtta atgctcattc ccaaacagaa agtggcaggg tccctttgca " +
+    "ttagaatgga ccaagcaata gtggacaaaa aaatcacatt gaaagcaaat ttcagtgtga " +
+    "ttttcaatcg acttgaagcc ctgatactac ttagagcttt tacggaagaa ggagcaattg " +
+    "tgggcgaaat ctcaccatta ccttctcttc caggacatac tgacaaggat gtcaaaaatg " +
+    "caattgaggt cctcatcgga gggtttgaat ggaatgataa cacagttcga gtctctgaaa " +
+    "ctctacagag attcgcttgg agaagcagcg atgaggatgg gagacctcca ctctctacaa " +
+    "agtagaaacg ggaaatggag agaacagcta agccagaaat tcgaagaaat aagatggttg " +
+    "attgaagaag tacgacatag attaaagatt acggagaata gctttgagca aataactttt " +
+    "atgcaagcct tacaactatt gcttgaagtg gagcaagaga taagaacttt ctcgtttcag " +
+    "cttatttaat gataa";
+
+    DNA_align( virusBAN15807, virusBAN15814); // NOTE FOR TA !!!!
+    // Comment the line above for the program to run quickly. 
+    // On the VM, the above worked with a score of 38, indicating
+    // quite a bit of resemblance. 
     return 0;
 }

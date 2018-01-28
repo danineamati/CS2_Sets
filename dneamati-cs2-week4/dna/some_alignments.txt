@@ -1,0 +1,85 @@
+
+Daniel Neamati
+
+
+Information about the below sequences:
+
+These two sequences are of different avian virus. These sequences are important for a number of reasons. First, avian viruses have been brought to public attention because of their incredible ability to spread. Fortunately, none have gone terribly out of hand yet, but the increase in human population increase this probabilty. These two different virus DNA's show surpising similarity with a match score of +38.
+
+
+References:
+
+Influenza A virus (A/African Stonechat/Vietnam/8/2009(H9N2)) PB2 gene for polymerase basic protein 2, complete cds
+
+Influenza A virus (A/African Stonechat/Vietnam/8/2009(H9N2)) NS2, NS1 genes for nonstructural protein 2, nonstructural protein 1, complete cds
+
+
+  AUTHORS   Takakuwa,H.
+  TITLE     Characterization of low pathogenic avian influenza viruses isolated
+            from wild birds in northern Vietnam during year 2006-2009
+
+Fauci, Anthony (2006) Pandemic Influenza Threat and Preparedness. Emerging Infectious Diseases. (CDC) Vol. 12, No. 1
+
+
+
+DNA Sequence 1 (Gene H9N2)
+
+   	1 aaatatattc aatatggaaa gaataaaaga actaagagat ttaatgtcac agtctcgcac
+       61 tcgcgagata ctgacaaaaa ccactgtgga ccatatggcc ataatcaaga aatatacatc
+      121 gggaaggcag gagaagaatc ctgcccttag gatgaaatgg atgatggcaa tgaaatatcc
+      181 aattacagca gacaaaagga taatggagat gatcccggaa aggaatgagc aaggtcagac
+      241 cctttggagc aagacaaatg atgctggatc agacagagtg atggtatcac ctctggctgt
+      301 gacgtggtgg aacagaaatg gaccaacgac aagtacagtc cattatccaa aggtctataa
+      361 aaactatttt gaaaaggtcg aaaggctaaa acatggaacc ttcggccccg ttcacttccg
+      421 aaaccaggtt aaaatacgcc gcagggttga cataaaccca ggccatgcag atcttaatgc
+      481 taaagaagca caagatgtca taatggagat cgtattccca aacgaagttg gagccaggat
+      541 attgacatca gagtcacagt taactataac aaaggaaaag aaggaagagc tacaggactg
+      601 caaaattgcc cctttgatgg tggcatacat gttggagaga gaactggttc gcaaaaccag
+      661 attcctacca gtagttggcg ggacaagcag tgtgtatatc gaagtgttgc atttgaccca
+      721 agggacctgc tgggagcaaa tgtacacacc gggaggggaa gtgagaaatg atgacgttga
+      781 tcagagttta attatcgctg ctagaaatat tgttagaaga gcaacagtat cagcagaccc
+      841 gctggcttcg ctcttggaga tgtgccatag tacacaaatt ggcgggataa ggatggtgga
+      901 catccttaga caaaacccaa cagaagaaca agctgtggat atatgcaaag cagcaatggg
+      961 tctaaggatc agttcatcct tcagctttgg aggattcact ttcaaaagga caagtggatc
+     1021 atctgtcaaa agggaggaag aaatgctcac cggcaacctt caaacattga aaataagagt
+     1081 acatgaagga tatgaggaat tcacaatggt cgggcgaaga gcaacagcca ttctaaggaa
+     1141 ggcaaccaga agactgatcc aactgatagt gagtgggaaa gacgagcaat caatcgccga
+     1201 ggcaatcata gtggcaatgg tgttttcaca agaggattgc atgataaagg cagtaagagg
+     1261 tgatttgaat tttgtcaaca gagcgaacca gcggctaaat cctatgcatc aactcctgag
+     1321 gcatttccaa aaggatgcaa aggtgctgtt ccaaaactgg ggaattgaac ccattgacaa
+     1381 tgtaatgggg atgatcggaa tattgcctga catgaccccc agcacagaga tgtcattgag
+     1441 aggagtgaga gtcagtaaaa tgggagtaga tgaatattcc agtactgaga aagtggttgt
+     1501 gagtattgat cgcttcttga gggtccggga ccagagggga aacgtactcc tgtctcctga
+     1561 agaggttagt gaaacacagg gtacagagaa gctgacgata acttattcat cgtccatgat
+     1621 gtgggaaatc aacggtccgg aatcagtgct agtcaacaca tatcaatgga tcattagaaa
+     1681 ttgggaaact gtgaagattc aatggtccca agaccctaca atgctttaca ataagatgga
+     1741 gtttgaaccc tttcaatccc tagtgcctaa ggctgccaga ggccaatata gtggatttgt
+     1801 aaggatgcta ttccagcaga tgcgtgatgt gctggggaca tttgacactg tccaaataat
+     1861 aaagctatta ccatttgcag cagccccacc ggagcagagc aggatgcagt tctcttctct
+     1921 aactgtgaat gtgaggggtt caggaatgag aatacttgtg agaggcaatt ctcctgtgtt
+     1981 caactacaac aaggcaacca agaggcttac agtacttgga aaggatgcag gtgcattgat
+     2041 ggaagaccca gatgagggaa cagcaggagt ggaatctgcg gtattgagag gatttctgat
+     2101 cctaggcaaa gaagacaaaa gatatgggcc agcattgagc atcaacgaat tgagcaatct
+     2161 tgcgagaggg gagaaggcta atgtgctgat agggcaagga gacgtggtgt tggtaatgaa
+     2221 acgaaaacgg gactctagca tacttactga cagccagaca gcgaccaaaa ggattcggat
+     2281 ggccatcaat tagtgttgaa ttgtttaaa
+
+
+
+DNA Sequence 2 (Gene NS2 and NS1)
+
+        1 acaaaaacat aatggattcc aacactgtgt caagcttcca ggtagactgc tttctttggc
+       61 atgtccgcaa acgatttgca gaccaagaac tgggtgatgc cccatttcta gatcggcttc
+      121 gccgagatca gaagtccctg agaggaagaa gcagcactct tggtctggac atcagaactg
+      181 ctactcgtga aggaaagcat atagtggaac ggattttaga ggacgagtca gatgaagcat
+      241 ttaaaatgag tattgcttca gtgccagctc cacgctatct aactgacatg actcttgaag
+      301 aaatgtcaag agattggtta atgctcattc ccaaacagaa agtggcaggg tccctttgca
+      361 ttagaatgga ccaagcaata gtggacaaaa aaatcacatt gaaagcaaat ttcagtgtga
+      421 ttttcaatcg acttgaagcc ctgatactac ttagagcttt tacggaagaa ggagcaattg
+      481 tgggcgaaat ctcaccatta ccttctcttc caggacatac tgacaaggat gtcaaaaatg
+      541 caattgaggt cctcatcgga gggtttgaat ggaatgataa cacagttcga gtctctgaaa
+      601 ctctacagag attcgcttgg agaagcagcg atgaggatgg gagacctcca ctctctacaa
+      661 agtagaaacg ggaaatggag agaacagcta agccagaaat tcgaagaaat aagatggttg
+      721 attgaagaag tacgacatag attaaagatt acggagaata gctttgagca aataactttt
+      781 atgcaagcct tacaactatt gcttgaagtg gagcaagaga taagaacttt ctcgtttcag
+      841 cttatttaat gataa

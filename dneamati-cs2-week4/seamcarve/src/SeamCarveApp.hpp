@@ -37,6 +37,7 @@
 
 #include <SDL.h>
 #include <math.h>
+#include <iostream>
 
 typedef struct
 {

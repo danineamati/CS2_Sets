@@ -43,42 +43,49 @@
 void fillCostTable(unsigned int **costTable, unsigned **smap, int w, int h)
 {
 	// We can easily fill the first row since it stays the same
-    for (int i = 0; i < w; i ++)
-    	costTable[i][0] = smap[i][0];
+    for (int j = 0; j < w; j ++)
+    	costTable[j][0] = smap[j][0];
 
     unsigned int minNeighbor;
 
     // Now we need to fill the cost table one row at a time (from left to
     // right).
-    for (int j = 0; j < h; j++)
+    for (int j = 1; j < h; j++)
     {
-    	for (int i = 1; i < w; i++)
+    	for (int i = 0; i < w; i++)
     	{
     		// We have three cases:
     		// The pixel is at the left edge.
     		if (i == 0)
     		{
+    			//std::cout << "Left ";
     			minNeighbor = min(costTable[i][j - 1], 
     				costTable[i + 1][j - 1]);
-    			costTable[i][j] += minNeighbor;
+    			//std::cout << "Min:" << minNeighbor << " Current: " << costTable[i][j];
+    			costTable[i][j] = smap[i][j] + minNeighbor;
+    			//std::cout << " Now: " << costTable[i][j] << std::endl;
     		}
 
     		// The pixel is at the right edge.
     		else if (i == w - 1)
     		{
+    			//std::cout << "Right ";
     			minNeighbor = min(costTable[i - 1][j - 1],
     				costTable[i][j - 1]);
-    			costTable[i][j] += minNeighbor;
+    			//std::cout << "Min:" << minNeighbor << std::endl;
+    			costTable[i][j] = smap[i][j] + minNeighbor;
     		}
 
     		// The pixel is somewhere in the middle of the picture.
     		else
     		{
+    			//std::cout << "Middle ";
     			minNeighbor = min(
     				min(costTable[i - 1][j - 1], costTable[i][j - 1]),
     				min(costTable[i][j - 1], costTable[i + 1][j - 1])
     				);
-    			costTable[i][j] += minNeighbor;
+    			//std::cout << "Min:" << minNeighbor << std::endl;
+    			costTable[i][j] = smap[i][j] + minNeighbor;
     		}
     	}
     }
@@ -105,17 +112,18 @@ void mapSeam(unsigned int *seam, unsigned int **costTable, int w, int h)
 		}
 	}
 
+	//std::cout << "lowest: " << lowest << std::endl;
+
 	seam[h - 1] = bestCol;
 
 	for (int j = h - 2; j >= 0; j--)
     {
-    	int col1 = costTable[bestCol - 1][j - 1];
-    	int col2 = costTable[bestCol][j - 1];
-		int col3 = costTable[bestCol + 1][j - 1];
     	// We have three cases:
 		// The pixel is at the left edge.
 		if (bestCol == 0)
 		{
+	    	int col2 = costTable[bestCol][j - 1];
+			int col3 = costTable[bestCol + 1][j - 1];
 			if (col3 < col2)
 				bestCol ++;
 		}
@@ -123,6 +131,8 @@ void mapSeam(unsigned int *seam, unsigned int **costTable, int w, int h)
 		// The pixel is at the right edge.
 		else if (bestCol == w - 1)
 		{
+	    	int col1 = costTable[bestCol - 1][j - 1];
+    		int col2 = costTable[bestCol][j - 1];
 			if (col1 < col2)
 				bestCol--;
 		}
@@ -130,6 +140,9 @@ void mapSeam(unsigned int *seam, unsigned int **costTable, int w, int h)
 		// The pixel is somewhere in the middle of the picture.
 		else
 		{
+			int col1 = costTable[bestCol - 1][j - 1];
+    		int col2 = costTable[bestCol][j - 1];
+			int col3 = costTable[bestCol + 1][j - 1];
 			int best = min(min(col1, col2), min(col2, col3));
 
 			if (best == col1)
@@ -169,13 +182,31 @@ unsigned int *DoSeamCarve(unsigned int **smap, int w, int h)
     // This is the array corresponding to the x-coordinates of the seam.
     unsigned int *seam = new unsigned int[h]; 
 
+    /*std::cout << "First Row" << std::endl;
+    for (int i = 0; i < w; i++)
+    {
+    	std::cout << costTable[i][0] << ' ';
+    } 
+    std::cout << std::endl << "Next Row" << std::endl;
+    for (int i = 0; i < w; i++)
+    {
+    	std::cout << costTable[i][1] << ' ';
+    }
+    std::cout << std::endl; */
+    /*std::cout << std::endl << "Last Row" << std::endl;
+    for (int i = 0; i < w; i++)
+    {
+    	std::cout << costTable[i][h - 1] << ' ';
+    }
+    std::cout << std::endl;*/
+
     mapSeam(seam, costTable, w, h);
 
-    /* A very bad seam carving algorithm... */
+    /* A very bad seam carving algorithm... 
     for (int i = 0; i < h; i++)
     {
         seam[i] = 0;
-    }
+    }*/
 
 
     // Before we return the best seam, we need to delete the cost table

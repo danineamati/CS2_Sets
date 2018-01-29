@@ -37,10 +37,116 @@
 
 
 /**
+ * @brief Fills the cost table with values from the saliency map. Note that
+ *        this occues in place.
+ */
+void fillCostTable(unsigned int **costTable, unsigned **smap, int w, int h)
+{
+	// We can easily fill the first row since it stays the same
+    for (int i = 0; i < w; i ++)
+    	costTable[i][0] = smap[i][0];
+
+    unsigned int minNeighbor;
+
+    // Now we need to fill the cost table one row at a time (from left to
+    // right).
+    for (int j = 0; j < h; j++)
+    {
+    	for (int i = 1; i < w; i++)
+    	{
+    		// We have three cases:
+    		// The pixel is at the left edge.
+    		if (i == 0)
+    		{
+    			minNeighbor = min(costTable[i][j - 1], 
+    				costTable[i + 1][j - 1]);
+    			costTable[i][j] += minNeighbor;
+    		}
+
+    		// The pixel is at the right edge.
+    		else if (i == w - 1)
+    		{
+    			minNeighbor = min(costTable[i - 1][j - 1],
+    				costTable[i][j - 1]);
+    			costTable[i][j] += minNeighbor;
+    		}
+
+    		// The pixel is somewhere in the middle of the picture.
+    		else
+    		{
+    			minNeighbor = min(
+    				min(costTable[i - 1][j - 1], costTable[i][j - 1]),
+    				min(costTable[i][j - 1], costTable[i + 1][j - 1])
+    				);
+    			costTable[i][j] += minNeighbor;
+    		}
+    	}
+    }
+}
+
+/**
+ * @brief Finds the best seam by choosing the best value from the bottom row
+ *        and bactracks through the cost table to find the corresponding seam.
+ *
+ * @return Nothing. Modifies seam in place.
+ */
+void mapSeam(unsigned int *seam, unsigned int **costTable, int w, int h)
+{
+	// First finds the lowest value
+	int bestCol = 0;
+	unsigned int lowest = costTable[bestCol][h - 1];
+
+	for (int i = 0; i < w; i++)
+	{
+		if (costTable[i][h - 1] < lowest)
+		{
+			bestCol = i;
+			lowest = costTable[i][h - 1];
+		}
+	}
+
+	seam[h - 1] = bestCol;
+
+	for (int j = h - 2; j >= 0; j--)
+    {
+    	int col1 = costTable[bestCol - 1][j - 1];
+    	int col2 = costTable[bestCol][j - 1];
+		int col3 = costTable[bestCol + 1][j - 1];
+    	// We have three cases:
+		// The pixel is at the left edge.
+		if (bestCol == 0)
+		{
+			if (col3 < col2)
+				bestCol ++;
+		}
+
+		// The pixel is at the right edge.
+		else if (bestCol == w - 1)
+		{
+			if (col1 < col2)
+				bestCol--;
+		}
+
+		// The pixel is somewhere in the middle of the picture.
+		else
+		{
+			int best = min(min(col1, col2), min(col2, col3));
+
+			if (best == col1)
+				bestCol--;
+			else if (best == col3)
+				bestCol++;
+    	}
+
+    	seam[j] = bestCol;
+    }
+}
+
+/**
  * @brief Peforms the seam carving algorithm.
  *
  * @param smap 2-d saliency map with width `w` and height `h`; can be
- * indexed by `smap[i][j]`
+ * indexed by `smap[i][j]` where 'i' is the column and 'j' is the row.
  *
  * @param w Width of the saliency map
  *
@@ -51,15 +157,32 @@
  */
 unsigned int *DoSeamCarve(unsigned int **smap, int w, int h)
 {
-    /* TODO: Write this function! */
+	// We first need to allocate the memory for the cost table
+	// Note that the cost table will be the same dimensions as the
+	// photo a saliency maps.
+    unsigned int **costTable = new unsigned int*[w];
+    for (int i = 0; i < w; i ++)
+    	costTable[i] = new unsigned int[h];
 
-    unsigned int *seam = new unsigned int[h];
+    fillCostTable(costTable, smap, w, h);
+
+    // This is the array corresponding to the x-coordinates of the seam.
+    unsigned int *seam = new unsigned int[h]; 
+
+    mapSeam(seam, costTable, w, h);
 
     /* A very bad seam carving algorithm... */
     for (int i = 0; i < h; i++)
     {
         seam[i] = 0;
     }
+
+
+    // Before we return the best seam, we need to delete the cost table
+    // to prevent a memory leak.
+    for (int i = 0; i < w; i ++)
+    	delete[] costTable[i]; // Here we delete every colums
+    delete[] costTable; // Now we delete the overall array itself
 
     return seam;
 }

@@ -77,6 +77,8 @@ private:
     void SeamHighlight();
 };
 
+void fillCostTable(unsigned int **costTable, unsigned **smap, int w, int h);
+void mapSeam(unsigned int *seam, unsigned int **costTable, int w, int h);
 unsigned int *DoSeamCarve(unsigned int **smap, int w, int h);
 
 #endif

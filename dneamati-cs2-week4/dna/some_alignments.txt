@@ -4,7 +4,7 @@ Daniel Neamati
 
 Information about the below sequences:
 
-These two sequences are of different avian virus. These sequences are important for a number of reasons. First, avian viruses have been brought to public attention because of their incredible ability to spread. Fortunately, none have gone terribly out of hand yet, but the increase in human population increase this probabilty. These two different virus DNA's show surpising similarity with a match score of +18 (for the first 720 base pairs).
+These two sequences are of different avian virus. These sequences are important for a number of reasons. First, avian viruses have been brought to public attention because of their incredible ability to spread. Fortunately, none have gone terribly out of hand yet, but the increase in human population increase this probabilty. Areas of southeast Asia, for example, have already seen an increase in avian-borne virus and diseases. These two different virus DNA sequences show surpising similarity with a match score of +18 (for the first 720 base pairs of each string).
 
 
 References:

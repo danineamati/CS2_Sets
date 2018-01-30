@@ -1,0 +1,30 @@
+
+Daniel Neamati
+
+1. What part of the above algorithm uses dynamic programming?
+
+The seam carving algortim uses dynamic programming in the cost table. 
+
+Every cell has to find the minimum of the its three neighbors above it (except for the left and right edges which only need to consider 2). Thus for any two horizontally adjacent cells, they will share two of these vertical neighbors. Additionally these neighbors also have vertical neighbors. For any reasonably sized photo, we have a mess: We have to constantly recaluculate the cost of a seam to a location i, j on the board. 
+
+Instead, the algortihm uses dynamic programming to keep track of the cost at a certain cell. We start by trivially copying the first row. By filling the cell horizontally, then vertically, the cost for the vertical neighbors of a cell will be immediately available. This dramatically cuts done on computation.
+
+2. The seam-finding algorithm can be implemented recursively, without dynamic programming. Explain how.
+
+The recursive implementation simply does not have a cost table. Instead, the program would start at the bottom row and try to calculate the lowest cost of a seam ending there. Essentially, it will ask its three vertical neighbors (or two neighbors at the edges) for their cost value. Since they don't know their cost, they will ask each of their three vertical neighbors (or two neighbors at the edges) for their cost value. This continues until the algortihm hits the top row and can simply return its saliency value (base case). The second row will then add its value to the saliency of the minimum of its vertical neighbors' saliency values. This trickles down the photo until the seam returns to the bottom row. 
+    
+
+3. For an NxN image, what is the complexity of the recursive algorithm without dynamic programming? State the complexity in big-O notation, as a function of N.
+
+The complexity of the recursive algorithm without dynamic programming is O(3^{height} * {width}) where height and width correspond to height and width of the photo. This is because we have to consider the best seam for each pixel in the bottom row (this is the width). For each of these pixels we recurisively call the function on three vertical neighbors (unless at the left or right edge) for the entire height of the photo (this is the 3^{height}).
+ 
+
+4. Using the recursive algorithm without dynamic programming, how long would it take to find a seam on a 50x50 image if 1 billion computations were made per second? State a reasonable lower bound. Hint: The answer should be huge.
+
+This would be worst case 3^(50) * 50 = 3.5894... x 10^25 total computations. At 1 billion computations per second, this would take 3.5894 x 10^16 seconds.
+
+5. For an NxN image, what is the complexity of the algorithm using dynamic programming?
+  
+
+6. Using the dynamic programming algorithm, how long would it take to find a seam on the same image as before (#4)?
+

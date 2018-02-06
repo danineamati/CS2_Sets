@@ -29,6 +29,8 @@ void buildMSTPrim(Graph g, GraphApp *app);
 
 void buildMSTKruskal(Graph g, GraphApp *app);
 
+Node findClosestNode(vector<Node *> &path);
+
 void findShortestPath(int start, int end, Graph g, GraphApp * app);
 
 /** Helper function to draw an edge on the graphics app given two nodes */

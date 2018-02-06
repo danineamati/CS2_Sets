@@ -9,16 +9,17 @@
  * (implementation).
  *
  */
+
+// Daniel Neamati
+
+
 #include "GraphAlgorithms.hpp"
 
-/**
- * TO STUDENTS: In all of the following functions, feel free to change the
- * function arguments and/or write helper functions as you see fit. Remember to
- * add the function header to GraphAlgorithms.hpp if you write a helper
- * function!
- *
- */
 
+/**
+ * @brief Searches the list of available edges and returns the edge with
+ *        the smallest distance.
+ */
 
 Edge findSmallest(vector<Edge> &availEdge) {
     Edge closest = availEdge[0];
@@ -27,23 +28,16 @@ Edge findSmallest(vector<Edge> &availEdge) {
 
     for (size_t i = 0; i < availEdge.size(); i++)
     {
-        //cout << availEdge[i].id << ": ";
         dist = availEdge[i].weight;
-        // cout << current->distance(*current->edges[i]) << endl;
         if (!availEdge[i].a->isVisited || !availEdge[i].b->isVisited) 
         {
-            //cout << "Not visited" << endl;
             if (dist < shortestDist)
             {
                 closest = availEdge[i];
-                // cout << "Node A = " << availEdge[i].a->id << endl;
                 shortestDist = dist;
             }
         }
-        //cout << "Shortest Dist: " << shortestDist << endl;
     }
-    //cout << "-------" << endl;
-    // cout << "Node A = " << closest.a->id << endl;
     return closest;
 }
 
@@ -79,8 +73,18 @@ Edge findSmallest(vector<Edge> &availEdge) {
  * existing edges for the MST.
  *
  * Add your outline here
+ * General idea: loop through graph and add the smallest of available edges
  *
- *
+ * 1) Initialize a list of available edges. These will be the edges that
+ *    connect a node to another node.
+ *    For the first iteration, the first node is the zeroth node.
+ *    From here, we add the edges that connect the zeroth node to its
+ *    adjacent nodes.
+ * 2) Now we need set the current node as visited
+ *    and loop through all of the current node's adjacent nodes.
+ *    If the end node is not on the MST (not visited), we add the edge.
+ * 3) In the looping, we need to find which is the next smallest available
+ *    edge. Then draw that edge and add the end node to the MST.
  */
 void buildMSTPrim(Graph g, GraphApp *app) {
     onMST.erase(onMST.begin(), onMST.end());
@@ -133,106 +137,6 @@ void buildMSTPrim(Graph g, GraphApp *app) {
             current = shortest.a;
         }
     }
-
-
-/*
-        // Loop through the remaining edges and check if any of the edges
-        // contains the current node as a node.
-        for (size_t i = 0; i < remaining.size(); i ++)
-        {
-            Edge *currentEdge = remaining[i];
-            cout << "Edge: " << currentEdge->id << ", weight of " << currentEdge->weight;
-            cout << " from node " << currentEdge->a->id << " to " << currentEdge->b->id << endl;
-
-            // If we find a match, we add the edge
-            if (currentEdge->a->id == current->id || currentEdge->b->id == current->id)
-            {
-                if (!isVisited(currentEdge->a->id, visited) || 
-                    !isVisited(currentEdge->b->id, visited))
-                {
-                    cout << "Adding " << currentEdge->b->id << endl;
-                    availEdge.push_back(currentEdge);
-                    remaining.erase(remaining.begin() + i);
-                }
-            }
-        }
-
-        // While the available edge vector is not empty,
-
-        // Find length of minimum edge weight
-        Edge * closest = availEdge[0];
-        size_t bestEdge = 0;
-
-        for (size_t i = 0; i < availEdge.size(); i ++)
-        {
-            if (availEdge[i]->weight < closest->weight) 
-            {
-                closest = availEdge[i];
-                bestEdge = i;
-            }
-        }
-
-        cout << "closest edge is " << closest->id << ", weight of " << closest->weight;
-        cout << " from node " << closest->a->id << " to " << closest->b->id << endl;
-
-        if (closest->a->id == current->id) 
-        {
-            visited.push_back(closest->b->id);
-            next = closest->b;
-        }
-        else 
-        {
-            visited.push_back(closest->a->id);
-            next = closest->a;
-        }
-
-        drawEdge(current, next, g.edges, app, true);
-
-        availEdge.erase(availEdge.begin() + bestEdge);
-
-        current = next; */
-
-
-
-    // Set node to current and add to visited
-
-    // add all available edges
-
-    // Set current to first point
-    /*
-    Node *current = g.nodes[0];
-    Node *next;
-
-    // Add current to vector of visited nodes and vector of path
-    vector<int> visited;
-    vector<Node *> path;
-
-    visited.push_back(current->id);
-    path.push_back(current);
-
-    // While the graph has not been fully traversed:
-    for (int i = 0; i < 10; i ++)
-    {
-        // Find closest node
-        current = path.back();
-        next = findClosestNode(current, visited);
-
-        // If there are no nodes that are close, pop from path
-        if (next == nullptr)
-            path.pop_back();
-
-        // draw Edge to closest node
-        else {
-            visited.push_back(next->id);
-
-            // set that node as the current
-            path.push_back(next);
-
-            drawEdge(current, next, g.edges, app, true);
-
-            cout << current << ' ' << next << endl;
-        }
-    }*/
 }
 
 /**
@@ -273,6 +177,15 @@ void buildMSTPrim(Graph g, GraphApp *app) {
  *
  * Add your outline here
  *
+ * General idea: Make trees of two nodes, then combine the trees at the smallest
+ *        edge distance to creat one tree. Stop when the tree spans the graph.
+ *
+ * 1) Initialize the first tree with the smallest edge.
+ * 2) Find the next smallest edge and make a tree
+ * 3) Continue looping. If an edge combines two trees, update the tree id
+ *    to the smaller id and consider the tree as a new tree.
+ *    It is very imporant that edges containing both endpoints on a single tree
+ *    are NOT considered! This would create a cycle.
  *
  */
 void buildMSTKruskal(Graph g, GraphApp *app) {
@@ -284,6 +197,27 @@ void buildMSTKruskal(Graph g, GraphApp *app) {
         edge_queue(compare_func);
 
     // Write code here
+}
+
+
+/**
+ * @ brief Searches the possibile nodes and finds the one that is
+ *         closest to the starting node.
+ */
+Node findClosestNode(vector<Node *> &path) {
+    Node closest = *path[0];
+    double shortestDist = 10000000;
+
+    for (size_t i = 0; i < path.size(); i++)
+    {
+        if (path[i]->distance_to_start < shortestDist) 
+        {
+            closest = *path[i];
+            shortestDist = closest.distance_to_start;
+        }
+    }
+
+    return closest;
 }
 
 /**
@@ -319,11 +253,85 @@ void buildMSTKruskal(Graph g, GraphApp *app) {
  *				GraphAlgorithms.cpp
  *
  * Add your outline here
- *
- *
+ * 1) Set start distance to 0 and everything else arbitrarly large.
+ * 2) Look at each neighbor of the current node (starting at the start)
+ *    and determine which path has the smallest distance.
+ * 3) Go to that node and update all of the neighbors to the new lowest
+ *    path.
+ * 4) We repeat the process of search, recalculate, and move until we
+ *    arrive at the destination.
  */
 void findShortestPath(int start, int end, Graph g, GraphApp *app) {
-    // Write code here
+    vector<Node *> path;
+
+    // Iterate through all of the nodes to set everything except the starting
+    // node to infinity.
+    // This is the initialization step.
+    for (size_t i = 0; i < g.nodes.size(); i ++)
+    {
+        if ((int) i != start) 
+        {
+            g.nodes[i]->distance_to_start = 1000000000;
+            g.nodes[i]->previous = nullptr;
+        }
+        else
+        {
+            g.nodes[start]->distance_to_start = 0;
+            g.nodes[start]->previous = nullptr;
+        }
+        path.push_back(g.nodes[i]);
+    }
+
+    // Now we try to find the path
+    while (!path.empty())
+    {
+        // We first need to find the closest node
+        Node closest = findClosestNode(path);
+
+        // Mark it as used up by removing it from the path
+        for (size_t i = 0; i < path.size(); i++)
+        {
+            if (path[i]->id == closest.id)
+            {
+                path.erase(path.begin() + i);
+                break;
+            }
+        }
+
+        // Now we want to add adjust the min distance to the start
+        // of all of the neighbors of the closest node
+        for (size_t i = 0; i < closest.edges.size(); i ++)
+        {
+            double dist = closest.distance_to_start + 
+                            closest.edges[i]->distance(closest);
+
+            // If the new distance is smaller than the current
+            if (dist < closest.edges[i]->distance_to_start)
+            {
+                closest.edges[i]->distance_to_start = dist;
+                closest.edges[i]->previous = g.nodes[closest.id];
+            }
+        }
+
+        // When we reach the end, we can stop the loop
+        if (closest.id == end)
+        {
+            cout << "destination found!" << endl;
+            break;
+        }
+    }
+
+    // Now we need to traceback in order to display the path.
+    Node * current = g.nodes[end];
+    cout << "Path found in length of " << current->distance_to_start << endl;
+    while (current->previous->id != start) 
+    {
+        drawEdge(current, current->previous, g.edges, app, false);
+        current = current->previous;
+    }
+
+    drawEdge(current, g.nodes[start], g.edges, app, false);
+
 }
 
 /**

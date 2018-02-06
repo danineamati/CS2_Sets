@@ -1,5 +1,8 @@
 /* debugging example */
 
+
+// Daniel Neamati
+
 #include <iostream>
 #include <vector>
 
@@ -123,7 +126,8 @@ int main(void)
         tree[i]->setVisited(false);
     }
 
-    std::cout << "8 is in the graph. Now it should find the node: ";
+    std::cout << "8 is in the graph. If the graph is closed ";
+    std::cout << "(sometimes it is not), it should find the node: ";
     if (tree[0]->dfs(8))
         std::cout << "Found!" << std::endl;
     else

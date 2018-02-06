@@ -51,7 +51,9 @@ struct Node
         : x(x_)
         , y(y_)
         , id(id_)
-    {}
+    {
+        isVisited = false;
+    }
 
 	/**
 	 * @brief Calculates distance from this node to another node
@@ -111,6 +113,11 @@ struct Node
      * 		  this node is in (trees are numbered from 0 to NPOINTS - 1)
      */
     int which_tree;
+
+    /**
+     * @brief Keeps track if a node has already been visited.
+     */
+    bool isVisited;
 };
 
 /**

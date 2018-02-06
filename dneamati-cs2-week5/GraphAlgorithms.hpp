@@ -23,7 +23,8 @@
 using namespace std;
 
 /** STUDENT IMPLEMENTED FUNCTIONS */
-Node * findClosestNode(Node * current, vector<int> visited);
+Edge findSmallest(vector<Edge> &availEdge);
+
 void buildMSTPrim(Graph g, GraphApp *app);
 
 void buildMSTKruskal(Graph g, GraphApp *app);

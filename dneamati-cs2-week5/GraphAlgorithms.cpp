@@ -19,44 +19,32 @@
  *
  */
 
-bool isVisited(int NodeId, vector<int> visited) {
-    for (size_t i = 0; i < visited.size(); i ++)
+
+Edge findSmallest(vector<Edge> &availEdge) {
+    Edge closest = availEdge[0];
+    double shortestDist = 100000000; // Abitrarily large as dummy value
+    double dist;
+
+    for (size_t i = 0; i < availEdge.size(); i++)
     {
-        if (NodeId == visited[i])
-            return true;
-    }
-    return false;
-}
-
-
-Node * findClosestNode(Node * current, vector<int> visited) {
-    Node * closest = nullptr;
-    int shortestDist = 100000000; // Abitrarily large as dummy value
-    int Dist;
-
-    cout << visited.size() << endl;
-    cout << "-------" << endl;
-
-    for (size_t i = 0; i < current->edges.size(); i++)
-    {
-        cout << current->edges[i]->id << ": ";
+        //cout << availEdge[i].id << ": ";
+        dist = availEdge[i].weight;
         // cout << current->distance(*current->edges[i]) << endl;
-        if (!isVisited(current->edges[i]->id, visited)) 
+        if (!availEdge[i].a->isVisited || !availEdge[i].b->isVisited) 
         {
-            cout << "Not visited" << endl;
-            Dist = current->distance(*current->edges[i]);
-
-            if (Dist < shortestDist)
+            //cout << "Not visited" << endl;
+            if (dist < shortestDist)
             {
-                closest = current->edges[i];
-                shortestDist = Dist;
+                closest = availEdge[i];
+                // cout << "Node A = " << availEdge[i].a->id << endl;
+                shortestDist = dist;
             }
         }
-        cout << "Shortest Dist: " << shortestDist << endl;
+        //cout << "Shortest Dist: " << shortestDist << endl;
     }
-    cout << "-------" << endl;
+    //cout << "-------" << endl;
+    // cout << "Node A = " << closest.a->id << endl;
     return closest;
-    //current->edges[0];
 }
 
 /**
@@ -98,23 +86,120 @@ void buildMSTPrim(Graph g, GraphApp *app) {
     onMST.erase(onMST.begin(), onMST.end());
     notOnMST.erase(notOnMST.begin(), notOnMST.end());
 
-    // Write your code here
-    /*for (size_t i = 0; i < g.nodes.size() - 1; i ++)
+    // Set current to first point
+    Node *current = g.nodes[0];
+    Node *next;
+    int count = 0;
+
+    // Make vector of available edges and vector of visited nodes
+    vector<Edge> availEdge;
+
+    // We can loop through all of the nodes
+    while (true)
     {
-        cout << g.nodes[i]->id << ": ";
-        
-        cout << g.nodes[i]->edges << endl;
-        // cout << g.nodes[i]->distance(*g.nodes[i + 1]) << endl;
+        // Set current as used up
+        current->isVisited = true;
+
+        // Loop through the connected nodes, and make edges to the nodes
+        for (size_t i = 0; i < current->edges.size(); i ++)
+        {
+            // Consider each adjacent node
+            next = current->edges[i];
+
+            if (!next->isVisited) 
+            {
+                availEdge.push_back(Edge(count, current, current->edges[i],
+                    current->distance(*current->edges[i])));
+                count ++;
+            }
+        }
+
+        // Choose the smallest edge.
+        Edge shortest = findSmallest(availEdge);
+
+        if (shortest.a->isVisited && shortest.b ->isVisited)
+        {
+            break;
+        }
+
+        drawEdge(shortest.a, shortest.b, g.edges, app, true);
+
+        if (current->id == shortest.a->id)
+        {
+            current = shortest.b;
+        }
+        else
+        {
+            current = shortest.a;
+        }
     }
-    for (size_t i = 0; i < g.nodes[0]->edges.size(); i++)
-    {
-        cout << g.nodes[0]->edges[i]->id << ": ";
-        cout << g.nodes[0]->distance(*g.nodes[0]->edges[i]) << endl;
-    }*/
-    //drawEdge(g.nodes[0], g.nodes[0]->edges[0], g.edges, app, true);
-    //drawEdge(g.nodes[0]->edges[0], g.nodes[0]->edges[0]->edges[1], g.edges, app, true);
+
+
+/*
+        // Loop through the remaining edges and check if any of the edges
+        // contains the current node as a node.
+        for (size_t i = 0; i < remaining.size(); i ++)
+        {
+            Edge *currentEdge = remaining[i];
+            cout << "Edge: " << currentEdge->id << ", weight of " << currentEdge->weight;
+            cout << " from node " << currentEdge->a->id << " to " << currentEdge->b->id << endl;
+
+            // If we find a match, we add the edge
+            if (currentEdge->a->id == current->id || currentEdge->b->id == current->id)
+            {
+                if (!isVisited(currentEdge->a->id, visited) || 
+                    !isVisited(currentEdge->b->id, visited))
+                {
+                    cout << "Adding " << currentEdge->b->id << endl;
+                    availEdge.push_back(currentEdge);
+                    remaining.erase(remaining.begin() + i);
+                }
+            }
+        }
+
+        // While the available edge vector is not empty,
+
+        // Find length of minimum edge weight
+        Edge * closest = availEdge[0];
+        size_t bestEdge = 0;
+
+        for (size_t i = 0; i < availEdge.size(); i ++)
+        {
+            if (availEdge[i]->weight < closest->weight) 
+            {
+                closest = availEdge[i];
+                bestEdge = i;
+            }
+        }
+
+        cout << "closest edge is " << closest->id << ", weight of " << closest->weight;
+        cout << " from node " << closest->a->id << " to " << closest->b->id << endl;
+
+        if (closest->a->id == current->id) 
+        {
+            visited.push_back(closest->b->id);
+            next = closest->b;
+        }
+        else 
+        {
+            visited.push_back(closest->a->id);
+            next = closest->a;
+        }
+
+        drawEdge(current, next, g.edges, app, true);
+
+        availEdge.erase(availEdge.begin() + bestEdge);
+
+        current = next; */
+
+
+
+    // Set node to current and add to visited
+
+    // add all available edges
 
     // Set current to first point
+    /*
     Node *current = g.nodes[0];
     Node *next;
 
@@ -147,7 +232,7 @@ void buildMSTPrim(Graph g, GraphApp *app) {
 
             cout << current << ' ' << next << endl;
         }
-    }
+    }*/
 }
 
 /**

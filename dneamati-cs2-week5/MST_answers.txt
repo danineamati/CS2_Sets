@@ -1,0 +1,47 @@
+
+Daniel Neamati
+
+What are the three most essential properties of a MST?
+
+1) It needs to minimize the weight between the nodes. In the current 
+implementation, this is the distance between nodes, but it could also
+be the time a package takes to travel between nodes. In that case,
+we would want to minimize the time of travel.
+
+2) It needs to span the graph. This means that every node is connected
+to at least one other node. More importantly, it means that every node in
+the graph has a path to another node in the graph.
+
+3) It needs to be a tree. This means that the MST cannot have a cycle.
+Every path is thus unique on the tree. Say we start at a node and explore.
+In the MST, there does not exist a path that will return to the starting node
+without crossing a node that has already been visited.
+
+
+Which adjacent node/edge?
+
+We always want to pick the smallest edge. Logically, this is because when
+the tree is made, we want the distance between nodes to be minimize.
+For the sake of contradiction, suppose that we chose the longer path (A to C
+instead of A to B), then when the tree is constructed there will exist a
+possible path (namely from A to B) which is shorter than the path from A to C.
+This violates the property of minimum in the MST. Therefore, we always
+want to chose the smallest path.
+
+After the first node, (i.e. when we have N nodes on the MST), we want to
+choose the smallest of all available edges. Thus, if an edge is not favorable
+at the start, it may become favorable at the edge if it is the minimum weight
+between two points.
+
+Which edge in Kruskal's Algorithm?
+
+In Kruskal's Algorithm we need to choose an edge between two trees such that 
+the distance is minimize. (We need to choose the one with the smallest weight).
+This is because each tree is a MST so all the distances between nodes in 
+each tree are already minimized. When we combine the trees we want to preserve
+the minimial weight property. Thus, the minimum distance between a node on one
+tree and a node on a separate tree is the smallest edge that connects the
+trees. Only adding one edge between the trees will also prevent cycles.
+
+We stop when every node is contained in a single tree, which concurrently
+means that there is only one tree.

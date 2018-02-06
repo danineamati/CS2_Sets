@@ -1,0 +1,35 @@
+
+Daniel Neamati
+
+Which neighbor to visit first?
+
+From the starting point, we want to investigate the smallest edge that
+will contain the starting node. 
+
+It is very important that we keep track of the distance that a node is
+located from the starting node. If we go to far, we want to be able to
+consider a different path. Basically, in each loop, we want to go to 
+the node that is closest to the start. If this node opens the door to
+shorter paths, we can correct the weight given to a node's neighbor.
+
+The last thing we need to keep track of it the previous node. This will
+point to the node that gave the node its smallest distance to the start.
+
+
+
+Why is it the shortest path?
+
+The path from start to end will be the shortest since the sum of all of
+the distances to the end will be the shortest. When we update the 
+"distance to start" variable we are keeping a cummulative tally. If a
+smaller path comes along, we update the path and reduce the cummulative
+tally to the new shortest path.
+
+
+How do we derive the path?
+
+We know we are done because we have reached the end. To derive the path
+we backtrack. We start at the end and draw an edge from the end to its
+previous node. Then we draw an edge from the previous to the previous's
+previous, etc. Finally we reach the start, draw the last edge, and have
+completed the shortest path.

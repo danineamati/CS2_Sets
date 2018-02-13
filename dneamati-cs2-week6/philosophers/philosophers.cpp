@@ -291,14 +291,26 @@ void greedy(Philosopher *phil)
     }
 }
 
-
+Semaphore s(NUMPHILS - 1);
 /**
  * @attention Student-implemented function
  */
 void waiter(Philosopher *p)
 {
-    // TODO Fill in this function with your waiter solution to the dining
-    //      philosophers problem.
+    while (true)
+    {
+        s.dec();
+        p->pickup_fork(LEFT);
+        p->pickup_fork(RIGHT);
+
+        p->eat();
+
+        p->release_fork(RIGHT);
+        p->release_fork(LEFT);
+        s.inc();
+
+        usleep(PICKUPTIME);
+    }
 }
 
 

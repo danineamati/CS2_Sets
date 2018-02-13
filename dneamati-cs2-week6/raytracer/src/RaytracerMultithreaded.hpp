@@ -64,6 +64,8 @@ public:
     ~RaytracerMultithreaded();
 
     void run();
+    void separate(int start, int end);
+    void trace(Ray *ray, Color **color);
 };
 
 #endif

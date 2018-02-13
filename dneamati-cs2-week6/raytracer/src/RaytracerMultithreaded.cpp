@@ -58,7 +58,7 @@
  */
 RaytracerMultithreaded::RaytracerMultithreaded(World *w, Shader *s) : RaytracerBase(w, s)
 {
-    /* TODO: Do any other initialization here. */
+    // Nothing to initialize.
 }
 
 
@@ -67,7 +67,7 @@ RaytracerMultithreaded::RaytracerMultithreaded(World *w, Shader *s) : RaytracerB
  */
 RaytracerMultithreaded::~RaytracerMultithreaded()
 {
-    /* TODO: Do any deinitialization here. */
+    // Everything is deleted in the functions they are used in.
 }
 
 
@@ -81,6 +81,119 @@ RaytracerMultithreaded::~RaytracerMultithreaded()
  */
 void RaytracerMultithreaded::run()
 {
-    /* TODO: Write this function. */
+	Viewport *viewport = world->get_viewport();
+
+	// For sake of convienence, we split the width.
+	int width = viewport->get_width();
+
+	std::thread **t = new std::thread *[NTHREADS];
+
+	int delta_width = width / NTHREADS;
+
+	for (size_t i = 0; i < NTHREADS; i++)
+	{
+		/* Create new threads for each split */
+		t[i] = new std::thread(&RaytracerMultithreaded::separate, this,
+			i * delta_width, (i + 1) * delta_width);
+	}
+    
+    for (size_t j = 0; j < NTHREADS; j++)
+    {
+		/* Join all running threads. */
+		t[j]->join();
+    }
+    
+    for (size_t k = 0; k < NTHREADS; k++)
+    {
+    	/* Delete all the threads */
+    	delete t[k];
+    }
+
+    delete[] t;
+
 }
 
+void RaytracerMultithreaded::separate(int start, int end)
+{
+	Ray *init_ray = new Ray();
+    Color *col;
+    Vertex *eye, *pixel;
+
+    /* The origin of the initial ray is always the viewer's eye. */
+    eye = world->get_eye();
+    init_ray->set_origin(new Vertex(eye));
+    Viewport *viewport = world->get_viewport();
+
+    
+    int height = viewport->get_height();
+
+	int i, j;
+	for (i = start; i < end; i++)
+    {
+        for (j = 0; j < height; j++)
+        {
+            /* The displacement of the ray is the pixel's coordinates
+             * minus the eye's coordinates. */
+            viewport->map_pixel_to_vertex(i, j, &pixel);
+            init_ray->set_displacement(new Vertex(pixel->x - eye->x,
+                pixel->y - eye->y, pixel->z - eye->z));
+            delete pixel;
+
+            /* Trace this ray. */
+            trace(init_ray, &col);
+
+            /* Color the pixel. */
+            viewport->color_pixel(i, j, col);
+            delete col;
+        }
+    }
+
+    delete init_ray;
+}
+
+
+/**
+ * @brief Traces a single ray. Assumes the ray originates at the
+ * eye and goes through a single pixel on the viewport, but could
+ * also be used to trace reflections.
+ *
+ * @param[in] ray The ray to trace.
+ *
+ * @param[out] color The color of the pixel on the viewport.
+ */
+void RaytracerMultithreaded::trace(Ray *ray, Color **color)
+{
+    unsigned int i;
+    Entity *entity = nullptr;
+    Ray *to_light, *normal;
+    Vertex *lp, *no;
+    vector<Light *> lights = world->get_light_vector();
+
+    *color = new Color(0.0, 0.0, 0.0);
+
+    if (get_closest_entity_intersection(ray, &normal, &entity))
+    {
+        /* This ray intersects an Entity, so we need to determine the
+         * color of the corresponding pixel. */
+        for (i = 0; i < lights.size(); i++)
+        {
+            lp = lights[i]->get_position();
+            no = normal->get_origin();
+
+            to_light = new Ray(new Vertex(no),
+                new Vertex(lp->x - no->x, lp->y - no->y, lp->z - no->z));
+
+            if (!light_blocked(to_light, lights[i], entity))
+            {
+                shader->shade_from_single_light(lights[i], entity, ray,
+                    to_light, normal, *color);
+            }
+
+            delete to_light;
+        }
+
+        shader->shade_ambient(entity, *color);
+
+        delete normal;
+    }
+}

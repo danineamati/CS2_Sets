@@ -22,7 +22,7 @@ public:
     Semaphore(unsigned long init_cnt) {
         count = init_cnt;
     }
-    ~Semaphore();
+    ~Semaphore() { }
 
     void inc() {
         std::unique_lock<std::mutex> lock(m);
@@ -35,6 +35,10 @@ public:
         while (!count)
             cv.wait(lock);
         count--;
+    }
+
+    unsigned long value() {
+        return count;
     }
 };
 

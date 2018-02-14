@@ -64,7 +64,11 @@ public:
     ~RaytracerMultithreaded();
 
     void run();
-    void separate(int start, int end);
+
+    // This helper function deals with the tracing after the picture is split.
+    void separate(int start, int end); 
+
+    // This is the same trace function as the single threaded class.
     void trace(Ray *ray, Color **color);
 };
 

@@ -19,13 +19,16 @@ solution is in deadlock.
 
 Consider n philosophers. Then, n - 1 philosophers can sit at a table at
 any given time. It is clear that n philosopher cannot sit at a table
-together since this would be the gready case. However, with n - 1 
+together since this would be the greedy case. However, with n - 1 
 philosophers, there will be one empty seat. Thus, all the seated philosophers
 can acquire the fork on their left and exactly one seated philosopher can
 acquire the fork on their right. This later philosopher can eat since he/she
 has two forks. The philosopher eats, returns the forks, and stands up. This
 leaves room for a new philosopher to eat. This the means that the philosophers
-are not in deadlock if 4 philosophers are seated.
+are not in deadlock if n - 1 philosophers are seated. Logically, the maximum
+number of seated philosophers is n - 1. Any number less than or equal to 
+n - 1 will work, but any number greater than n - 1 will not. In the case of
+5 philosophers, 4 can be seated.
 
 This is different from how many philosophers can be eating. For n
 philosophers, the maximum number that can be eating is the floor of (n / 2).
@@ -39,6 +42,18 @@ no longer eat. Thus, the philosopher two seats away can eat. But as a result,
 the last philosopher cannot eat. Thus, only two philosophers can eat at a
 given time.
 
+Thus, maximize the number of seated philosophers with n - 1. Maximize the
+number of eating philosophers by seating the roof of half the philosophers.
+
 
 
 (Chandy) Why will an asymmetric start state prevent deadlock?
+
+We can see this clearly with contradiciton. Assume to the contrary that a
+symmetric start is possible. In this implementation, every philosopher will
+reach for his or her dirty LEFT fork. Since none of them have a RIGHT fork,
+they will all request for a right fork. Since all of the forks are dirty,
+the philosophers will clean his/her fork and hand it to his/her neighbor. Now
+everyone has one clean fork that they do not want to release. This is a
+deadlock. Therefore, a symmetric start is not possible and the state must
+start asymmetrically.

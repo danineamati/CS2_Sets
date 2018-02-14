@@ -264,6 +264,24 @@ public:
     {
 
     }
+
+    bool getRequest(int which)
+    {
+        //std::cout << get_id() << std::endl;
+        return reactToRequest(which);
+    }
+
+    bool reactToRequest(int which)
+    {
+        if (get_fork(which)->is_dirty() && !is_eating())
+        {
+            get_fork(which)->set_dirty(false);
+            release_fork(which);
+            return true;
+        }
+        else
+            return false;
+    }
 };
 
 
@@ -291,7 +309,18 @@ void greedy(Philosopher *phil)
     }
 }
 
+/**
+ * @IMPORTANT To maximize the number of eating philosophers
+ *            use:
+ *        Semaphore s(NUMPHILS - ((int) NUMPHILS / 2) - NUMPHILS % 2);
+ */
+
+/**
+ * @IMPORTNANT To maximize the number of seated philosophers.
+ */
 Semaphore s(NUMPHILS - 1);
+
+
 /**
  * @attention Student-implemented function
  */
@@ -299,7 +328,10 @@ void waiter(Philosopher *p)
 {
     while (true)
     {
+        // Seat the philosopher
         s.dec();
+
+        // Try to pick up forks
         p->pickup_fork(LEFT);
         p->pickup_fork(RIGHT);
 
@@ -307,6 +339,8 @@ void waiter(Philosopher *p)
 
         p->release_fork(RIGHT);
         p->release_fork(LEFT);
+
+        // Leave the table after eating.
         s.inc();
 
         usleep(PICKUPTIME);
@@ -319,8 +353,45 @@ void waiter(Philosopher *p)
  */
 void talking(Philosopher *p)
 {
-    // TODO Fill in this function with your implementation of the Chandy-Misra
-    //      solution.
+    TalkingPhilosopher *talkPhil = (TalkingPhilosopher *) p;
+    int currentID = p->get_id();
+
+    while (true)
+    {
+        while(!talkPhil->has_fork(LEFT) || !talkPhil->has_fork(RIGHT))
+        {
+            // Request the left fork if phil does not have it
+            if (!talkPhil->has_fork(LEFT))
+            {
+                if (((TalkingPhilosopher *) phils[IDLEFT(currentID)])->
+                            getRequest(RIGHT))
+                    {
+                        // If the other philosopher releases the 
+                        // fork, this philosopher can pick it up
+                        talkPhil->pickup_fork(LEFT);
+                    }
+            }
+
+            // Request the right fork if phil does not have it
+            if (!talkPhil->has_fork(RIGHT))
+            {
+                if (((TalkingPhilosopher *) phils[IDRIGHT(currentID)])->
+                            getRequest(LEFT))
+                    {
+                        // If the other philosopher releases the 
+                        // fork, this philosopher can pick it up
+                        talkPhil->pickup_fork(RIGHT);
+                    }
+            }
+        }
+
+        // If the function has exited the while loop, the philosopher 
+        // has both forks.
+    
+        talkPhil->eat();
+        talkPhil->release_fork(RIGHT);
+        talkPhil->release_fork(LEFT);
+    }
 }
 
 

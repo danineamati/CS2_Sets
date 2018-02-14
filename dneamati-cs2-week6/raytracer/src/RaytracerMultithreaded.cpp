@@ -113,6 +113,10 @@ void RaytracerMultithreaded::run()
 
 }
 
+/**
+ * @brief This function runs the raytracing for each "seperate" part
+ *        of the image.
+ */
 void RaytracerMultithreaded::separate(int start, int end)
 {
 	Ray *init_ray = new Ray();

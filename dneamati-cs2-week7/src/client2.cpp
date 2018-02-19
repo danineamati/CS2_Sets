@@ -100,13 +100,64 @@ static int DoConnect(const char * hostname, uint16_t port, const char * username
     guint ctx = gtk_statusbar_get_context_id(status_bar, "none");
     char status_str[1024];
 
-    /* TODO: Fix this function and make it useful. */
+    int ret = sock->Connect(&__hostname, port);
+    if (ret < 0)
+    {
+        // something terrifying happened x_X
+        if(ret == -1)
+        {
+            ERROR("connect error: %s", strerror(errno));
+        }
+        else if(ret == -3)
+        {
+            ERROR("connect error: %s", gai_strerror(errno));
+        }
+        else
+        {
+            ERROR("this error should never occur");
+        }
 
-    snprintf(status_str, 1024, "Connecting not implemented");
+        return -1;
+    }
+    else
+    {
+        snprintf(status_str, 1024, "Connecting....");
+
+        std::string * authAddress = sock->GetRemoteAddr();
+        printf("%a \n", *authAddress);
+        printf("%u \n", *authAddress);
+        printf("%p \n", authAddress);
+        
+        std::string * authorization = sock->Recv(1024, false);
+        if (authorization == NULL)
+        {
+            // bad stuff happened
+            ERROR("recv error: %s", strerror(errno));
+            sock->Disconnect();
+        }
+        /*else if ( (int) authorization->substr(0,4) == MSG_AUTH_OK)
+        {
+            connected = true;
+        }
+        else*/
+        {
+            /*std::cout << "Address: " << authorization << std::endl;
+            std::cout << *authorization << std::endl;*/
+            printf("%a \n", *authorization);
+            printf("%u \n", *authorization);
+            printf("%p \n", authorization);
+            connected = true;
+
+            //ERROR("Could not connect with this hostname or port.");
+            //sock->Disconnect();
+        }
+    }
+    
+
     gtk_statusbar_pop(status_bar, ctx);
     gtk_statusbar_push(status_bar, ctx, status_str);
 
-    return -1;
+    return 0;
 }
 
 /**
@@ -332,6 +383,7 @@ int main(int argc, char ** argv)
 
     gtk_builder = gtk_builder_new();
     ret = gtk_builder_add_from_file(gtk_builder, "./client2.glade", &err);
+
     if(!ret) // GTK functions usually return 0 on error
     {
         // if we can't load our UI then we can't continue!

@@ -47,11 +47,67 @@ int main(int argc, char ** argv)
 
     REQUIRE(argc == 2, "usage: %s port", argv[0]);
 
-    /* TODO: Write this code.
-     *
-     * Accept a connection, recv a message, send it back, close the connection.
-     * Rinse and repeat forever.
-     */
+    CS2Net::Socket listener;
+    CS2Net::Socket * incoming_conn = NULL;
+
+    // bind to some arbitrarily chosen port
+    // with a backlog of 3 connections allowed
+    int err = listener.Bind(atoi(argv[1]), 3);
+    REQUIRE(err == 0, "Failed to bind!");
+
+    incoming_conn = listener.Accept();
+    REQUIRE(incoming_conn != NULL, "Failed to accept!");
+
+    // Step 1: Receives a message from the server.
+    std::string * incoming = incoming_conn->Recv(1024, false);
+    if(incoming == NULL)
+    {
+        // bad stuff happened
+        ERROR("recv error: %s", strerror(errno));
+    }
+    else
+    {
+      // we got some data yay
+
+      
+      // Step 2: Prints the message.
+      std::cout << *incoming << std::endl;
+    }
+
+    // Step 3: Send a message to the server.
+    std::string to_send("ECHO ECHo ECho Echo echo");
+
+    int ret = incoming_conn->Send(&to_send);
+    if(ret < 0)
+    {
+        // bad stuff happened
+        if(ret == -1)
+        {
+            ERROR("send error: %s", strerror(errno));
+        }
+        else
+        {
+            ERROR("this error should never occur");
+        }
+    }
+ 
+
+    // Step 4: Disconnects
+    ret = incoming_conn->Disconnect();
+    if(ret < 0)
+    {
+        // bad stuff happened
+        if(ret == -1)
+        {
+            // you might actually be able to ignore these errors
+            // but we'll print them anyway
+            ERROR("disconnect error: %s", strerror(errno));
+        }
+        else
+        {
+            ERROR("this error should never occur");
+        }
+    }
 
     return 0;
 }

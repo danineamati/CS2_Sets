@@ -150,10 +150,8 @@ static int DoConnect(const char * hostname, uint16_t port, const char * username
             std::string * payload_Length = sock->Recv(2, true);
 
             unsigned short msgLength = *((unsigned short *) payload_Length->data());
-            std::cout << msgLength << std::endl;
 
             std::string *payload = sock->Recv(msgLength, true);
-            std::cout << *payload << std::endl;
 
             connected = true;
 
@@ -167,10 +165,10 @@ static int DoConnect(const char * hostname, uint16_t port, const char * username
             std::string * payload_Length = sock->Recv(2, true);
 
             unsigned short msgLength = *((unsigned short *) payload_Length->data());
-            std::cout << msgLength << std::endl;
 
             std::string *payload = sock->Recv(msgLength, true);
-            std::cout << *payload << std::endl;
+
+            ERROR("ERROR: %s", *payload);
 
             DoDisconnect();
         }
@@ -244,10 +242,8 @@ static gboolean PollSocket(gpointer data)
         std::string * incomingLength = sock->Recv(2, true);
 
         unsigned short msgLength = *((unsigned short *)incomingLength->data());
-        std::cout << msgLength << std::endl;
 
         std::string * payload = sock->Recv(msgLength, true);
-        std::cout << *payload << std::endl;
 
         if ((unsigned char) incomingType->at(0) == MSG_SERVER_MESSAGE)
         {
@@ -261,7 +257,6 @@ static gboolean PollSocket(gpointer data)
 
         else if ((unsigned char) incomingType->at(0) == MSG_USERLIST)
         {
-            std::cout << "New user message."  << std::endl;
             std::list<std::string> userlist;
 
             std::size_t index = 0;
@@ -279,7 +274,6 @@ static gboolean PollSocket(gpointer data)
 
             SetUserList(&userlist);
 
-            std::cout << "Added Users." << std::endl;
         }
 
         else if ((unsigned char) incomingType->at(0) == MSG_GENERAL_ERROR)

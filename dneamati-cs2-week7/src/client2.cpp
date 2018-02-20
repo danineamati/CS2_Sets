@@ -121,36 +121,66 @@ static int DoConnect(const char * hostname, uint16_t port, const char * username
     }
     else
     {
-        snprintf(status_str, 1024, "Connecting....");
+        std::string usernameEncoded = 
+            EncodeNetworkMessage(MSG_AUTH_USERNAME, &__username);
 
-        std::string * authAddress = sock->GetRemoteAddr();
-        printf("%a \n", *authAddress);
-        printf("%u \n", *authAddress);
-        printf("%p \n", authAddress);
-        
-        std::string * authorization = sock->Recv(1024, false);
-        if (authorization == NULL)
+        ret = sock->Send(&usernameEncoded);
+        if(ret < 0)
         {
             // bad stuff happened
-            ERROR("recv error: %s", strerror(errno));
-            sock->Disconnect();
+            if(ret == -1)
+            {
+                ERROR("send error: %s", strerror(errno));
+                DoDisconnect();
+            }
+            else
+            {
+                ERROR("this error should never occur");
+                DoDisconnect();
+            }
         }
-        /*else if ( (int) authorization->substr(0,4) == MSG_AUTH_OK)
+
+        snprintf(status_str, 1024, "Connecting....");
+        
+        std::string * authorization = sock->Recv(1, true);
+        if ((unsigned char) authorization->at(0) == MSG_AUTH_OK)
         {
-            connected = true;
-        }
-        else*/
-        {
-            /*std::cout << "Address: " << authorization << std::endl;
-            std::cout << *authorization << std::endl;*/
-            printf("%a \n", *authorization);
-            printf("%u \n", *authorization);
-            printf("%p \n", authorization);
+            // We have authorization to proceed.
+            // Now we need to ask for the next two bytes
+            std::string * payload_Length = sock->Recv(2, true);
+
+            unsigned short msgLength = *((unsigned short *) payload_Length->data());
+            std::cout << msgLength << std::endl;
+
+            std::string *payload = sock->Recv(msgLength, true);
+            std::cout << *payload << std::endl;
+
             connected = true;
 
-            //ERROR("Could not connect with this hostname or port.");
-            //sock->Disconnect();
         }
+        else if ((unsigned char) authorization->at(0) == MSG_AUTH_ERROR)
+        {
+            ERROR("Invalid Username.");
+
+            // Authorization failed.
+            // Now we need to ask for the next two bytes
+            std::string * payload_Length = sock->Recv(2, true);
+
+            unsigned short msgLength = *((unsigned short *) payload_Length->data());
+            std::cout << msgLength << std::endl;
+
+            std::string *payload = sock->Recv(msgLength, true);
+            std::cout << *payload << std::endl;
+
+            DoDisconnect();
+        }
+        else
+        {
+            ERROR("Invalid Username. Something went quite wrong.");
+            DoDisconnect();
+        }
+
+        snprintf(status_str, 1024, "Connected");
     }
     
 
@@ -187,8 +217,82 @@ static void DoDisconnect()
  */
 static gboolean PollSocket(gpointer data)
 {
-    /* TODO: Fix this function so it does something useful. */
-    return false;
+    std::vector<CS2Net::PollFD> poll_vec(1);
+    poll_vec[0].sock = sock;
+    poll_vec[0].SetRead(true);
+
+    // Poll for a message
+    // now do the poll (10 ms timeout)
+    int poll_err = CS2Net::Poll(&poll_vec, 10);
+    REQUIRE(poll_err >= 0, "error on poll!?");
+
+    // is there a hangup or error?
+    if(poll_vec[0].HasHangup() || poll_vec[0].HasError())
+    {
+        // There's a hangup and/or error
+        ERROR("Poll error!");
+    }
+    // did we get anything to read?
+    if(poll_vec[0].CanRead())
+    {
+        // Receives a message from the server.
+
+        // First get the type
+        std::string * incomingType = sock->Recv(1, true);
+
+        // Next get the length
+        std::string * incomingLength = sock->Recv(2, true);
+
+        unsigned short msgLength = *((unsigned short *)incomingLength->data());
+        std::cout << msgLength << std::endl;
+
+        std::string * payload = sock->Recv(msgLength, true);
+        std::cout << *payload << std::endl;
+
+        if ((unsigned char) incomingType->at(0) == MSG_SERVER_MESSAGE)
+        {
+            AddLineToBuffer((gpointer) payload->c_str());
+        }
+
+        else if ((unsigned char) incomingType->at(0) == MSG_CHATMSG)
+        {
+            AddLineToBuffer((gpointer) payload->c_str());
+        }
+
+        else if ((unsigned char) incomingType->at(0) == MSG_USERLIST)
+        {
+            std::cout << "New user message."  << std::endl;
+            std::list<std::string> userlist;
+
+            std::size_t index = 0;
+            std::size_t lastLook = -1;
+
+            while(index != std::string::npos)
+            {
+                index = payload->find_first_of("\n", lastLook + 1);
+                
+                userlist.push_back(payload->substr(lastLook + 1, index - lastLook - 1));
+
+                lastLook = index;
+                
+            }
+
+            SetUserList(&userlist);
+
+            std::cout << "Added Users." << std::endl;
+        }
+
+        else if ((unsigned char) incomingType->at(0) == MSG_GENERAL_ERROR)
+        {
+            AddLineToBuffer((gpointer) payload->c_str());
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /**
@@ -210,9 +314,28 @@ static gboolean PollSocket(gpointer data)
  */
 static int SendMessage(MESSAGE_TYPE type, std::string * payload)
 {
-    /* TODO: make this function useful. */
-    ERROR("sending messages is not implemented yet");
-    return -2;
+    std::string outgoingEncoded = 
+            EncodeNetworkMessage(type, payload);
+
+    int ret = sock->Send(&outgoingEncoded);
+    if(ret < 0)
+    {
+        // bad stuff happened
+        if(ret == -1)
+        {
+            ERROR("send error: %s", strerror(errno));
+            DoDisconnect();
+            return -1;
+        }
+        else
+        {
+            ERROR("this error should never occur");
+            DoDisconnect();
+            return -1;
+        }
+    }
+
+    return payload->length();
 }
 
 /**
@@ -228,18 +351,19 @@ static void ProcessChatLine(GtkWidget * w, gpointer data)
     GtkEntry* __w = (GtkEntry*)w;
     const char * txt = gtk_entry_get_text(__w);
 
-    /*
-     * TODO: Add some code here to react to a processed chat line.
-     * The chat box will always be used to send chat messages only,
-     * so you don't have to worry about trying to do lots of parsing.
-     * Just create a MSG_CHATMSG message and send it over
-     * the open socket.
-     */
+    std::string toSend;
+
+    toSend.append(txt);
+
+    if (connected)
+    {
+        SendMessage(MSG_CHATMSG, &toSend);
+    }
 
     // The default behavior (for demonstration) is to print the chat line to the
     // chat buffer exactly as entered.
     // You may want to alter or remove this behavior as you see fit.
-    AddLineToBuffer((gpointer)txt);
+    //AddLineToBuffer((gpointer)txt);
 
     // clear the chat line for the next entry
     gtk_entry_set_text(__w,"");

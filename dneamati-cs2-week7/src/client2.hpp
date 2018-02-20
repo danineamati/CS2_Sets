@@ -46,6 +46,7 @@ either expressed or implied, of the California Institute of Technology.
 #include <cstring>
 #include <string>
 #include <list>
+#include <iostream>
 
 #include <gtk/gtk.h>
 
@@ -68,8 +69,19 @@ either expressed or implied, of the California Institute of Technology.
  */
 std::string EncodeNetworkMessage(MESSAGE_TYPE type, std::string * payload)
 {
-    // TODO: fix this.
-    return std::string();
+	std::string toSend;
+
+	unsigned short int sendType = payload->length();
+
+	const char * __sendType_bits;
+
+	__sendType_bits = (const char *) (&sendType);
+
+	toSend.append(1, (char) type);
+	toSend.append(__sendType_bits, sizeof(unsigned short int));
+	toSend.append(*payload);
+
+    return toSend;
 }
 
 #endif

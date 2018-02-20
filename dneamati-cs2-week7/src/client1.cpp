@@ -78,48 +78,73 @@ int main(int argc, char ** argv)
         }
     }
 
+    time_t lastSent = time(NULL);
+    time_t current = time(NULL);
+    std::vector<CS2Net::PollFD> poll_vec(1);
+    poll_vec[0].sock = &sock;
+    poll_vec[0].SetRead(true);
+
     while (true)
     {
-        // Step 2: Send a message to the server.
-        std::string to_send("Good evening fellow CS2'ers \n");
-
-        ret = sock.Send(&to_send);
-        if(ret < 0)
+        current = time(NULL);
+        //std::cout << difftime(current, lastSent) << std::endl;
+        // If one second has not elapsed, we can poll for a message
+        if(difftime(current, lastSent) < 2)
         {
-            // bad stuff happened
-            if(ret == -1)
+            // Step 2: Poll for a message
+            // now do the poll (10 ms timeout)
+            int poll_err = CS2Net::Poll(&poll_vec, 10);
+            REQUIRE(poll_err >= 0, "error on poll!?");
+
+            // is there a hangup or error?
+            if(poll_vec[0].HasHangup() || poll_vec[0].HasError())
             {
-                ERROR("send error: %s", strerror(errno));
+                // There's a hangup and/or error
+                ERROR("poll error!");
+            }
+            // did we get anything to read?
+            if(poll_vec[0].CanRead())
+            {
+                // Step 3: Receives a message from the server.
+                std::string * incoming = sock.Recv(1024, false);
+                if(incoming == NULL)
+                {
+                    // bad stuff happened
+                    ERROR("recv error: %s", strerror(errno));
+                }
+                else
+                {
+                    // we got some data yay
+                    // Step 4: Prints the message.
+                    std::cout << *incoming << std::endl;
+                }
+            }
+        }
+
+        // Else, we can now send out own message
+        else 
+        {
+            // Step 5: Send a message to the server.
+            std::string to_send("Good evening fellow CS2'ers \n");
+
+            ret = sock.Send(&to_send);
+            if(ret < 0)
+            {
+                // bad stuff happened
+                if(ret == -1)
+                {
+                    ERROR("send error: %s", strerror(errno));
+                }
+                else
+                {
+                    ERROR("this error should never occur");
+                }
             }
             else
             {
-                ERROR("this error should never occur");
+                // Update lastSent to now
+                lastSent = time(NULL);
             }
-        }
-        else
-        {
-            time_t current = time(NULL);
-            time_t halt = time(NULL);
-
-            while (difftime(halt, current) < 1)
-            {
-                halt = time(NULL);
-                // Do nothing. Just wait one second.
-            }
-        }
-
-        // Step 3: Receives a message from the server.
-        std::string * incoming = sock.Recv(1024, false);
-        if(incoming == NULL)
-        {
-            // bad stuff happened
-            ERROR("recv error: %s", strerror(errno));
-        }
-        else
-        {
-            // we got some data yay
-            // Step 4: Prints the message.
-            std::cout << *incoming << std::endl;
         }
     }     
 

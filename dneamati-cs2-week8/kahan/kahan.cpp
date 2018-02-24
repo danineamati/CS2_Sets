@@ -64,8 +64,28 @@ float naive_sum(vector<float> vec)
 }
 
 
-// TODO: Implement stable summation here, test it in main() below, and
-// show how much better a job you can do than a simple sum operation!
+/**
+ * @ brief: Kahn Algorithm for stable summation as discussed in
+ *          recitation.
+ * @ param: vector of floats to sum
+ */
+float kahan_sum(vector<float> vec)
+{
+	float sum = 0;
+	float error = 0;
+	float new_from_error;
+	float next_sum;
+
+	for (size_t i = 0; i < vec.size(); i++)
+	{
+		new_from_error = vec[i] - error;
+		next_sum = sum + new_from_error;
+		error = (next_sum - sum) - new_from_error;
+		sum = next_sum;
+	}
+
+	return sum;
+}
 
 
 int main()
@@ -79,4 +99,5 @@ int main()
 
 	// Try out our summation algorithms!
 	cout << "Result of naive summation: " << naive_sum(vec) << endl;
+	cout << "Result of Kahan summation: " << kahan_sum(vec) << endl;
 }

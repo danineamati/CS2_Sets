@@ -45,6 +45,22 @@
 
 #include "EulerIntegrator.hpp"
 
+/**
+ * @brief Function for planetary motion
+ * @param x is current x-coordinate
+ *        y is current y-coordinate
+ *        direction is true for x, false for y
+ */
+double planetaryMotion(double *x, double *y, bool direction)
+{
+	double denominator = pow((pow(*x, 2) + pow(*y, 2)), 1.5);
+
+	if (direction)
+		return - *x / denominator;
+	else
+		return - *y / denominator;
+}
+
 
 /**
  * @brief Solve a differential equation with the forward Euler method.
@@ -62,7 +78,16 @@
 void EulerIntegrator::forward_euler(double *x, double *y, double *vx,
     double *vy, double h)
 {
-    
+	double next_vx = *vx + h * planetaryMotion(x, y, true);
+	double next_x = *x + h * (*vx);
+
+	double next_vy = *vy + h * planetaryMotion(x, y, false);
+	double next_y = *y + h * (*vy);
+
+	*x = next_x;
+	*y = next_y;
+	*vx = next_vx;
+	*vy = next_vy;
 }
 
 
@@ -102,5 +127,14 @@ void EulerIntegrator::backward_euler(double *x, double *y, double *vx,
 void EulerIntegrator::symplectic_euler(double *x, double *y, double *vx,
     double *vy, double h)
 {
-    
+    double next_vx = *vx + h * planetaryMotion(x, y, true);
+	double next_x = *x + h * next_vx;
+
+	double next_vy = *vy + h * planetaryMotion(x, y, false);
+	double next_y = *y + h * next_vy;
+
+	*x = next_x;
+	*y = next_y;
+	*vx = next_vx;
+	*vy = next_vy;
 }

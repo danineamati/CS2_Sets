@@ -89,6 +89,57 @@ ComplexNumber *SpectralSynthesizer::getSpectrum(int n, double h)
     assert(powerOfTwo(n));
     
     ComplexNumber *A = new ComplexNumber[n*n];
+
+    double phase, radius;
+
+    for (int i = 0; i < n / 2; i++)
+    {
+        for (int j = 0; j < n / 2; j ++)
+        {
+            phase = 2 * PI * uniform();
+            int i0, j0;
+
+            if (i != 0 || j != 0)
+                radius = pow(i * i + j * j, -(h + 1)  / 2) * gaussian();
+            else
+                radius = 0;
+
+            ndx(A, i, j, n) = ComplexNumber(radius * cos(phase),
+                                 radius * sin(phase));
+
+            if (i == 0)
+                i0 = 0;
+            else
+                i0 = n - 1;
+
+            if (j == 0)
+                j0 = 0;
+            else
+                j0 = n - 1;
+
+            ndx(A, i0, j0, n) = ComplexNumber(radius * cos(phase),
+                                 - radius * sin(phase));
+        }
+    }
+
+    ndx(A, n / 2, 0, n) = ComplexNumber(ndx(A, n / 2, 0, n).real(), 0);
+    ndx(A, 0, n / 2, n) = ComplexNumber(ndx(A, n / 2, 0, n).real(), 0);
+    ndx(A, n / 2, n / 2, n) = ComplexNumber(ndx(A, n / 2, 0, n).real(), 0);
+
+    for (int i = 1; i < (n / 2) - 1; i ++)
+    {
+        for (int j = 1; j < (n / 2) - 1; j++)
+        {
+            phase = 2 * PI * uniform();
+            radius = pow(i * i + j * j, -(h + 1)  / 2) * gaussian();
+
+            ndx(A, i, n - j, n) = ComplexNumber(radius * cos(phase),
+                                 radius * sin(phase));
+            ndx(A, n - i, j, n) = ComplexNumber(radius * cos(phase),
+                                 - radius * sin(phase));
+        
+        }
+    }    
     
     return A;
 }

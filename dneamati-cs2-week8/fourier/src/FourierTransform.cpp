@@ -44,6 +44,7 @@
  */
 
 #include "FourierTransform.hpp"
+#include <iostream>
 
 #define ndx(obj,i,j,n)      (obj[(i)+(j)*n])
 
@@ -92,9 +93,6 @@ ComplexNumber *FourierTransform::slow_transform(ComplexNumber *input, int n)
         }
     }
 
-    /*for (int j = 0; j < 3; j++)
-        w.printVector(dft_matrix[j], n);*/
-
     // Now we multiply the matrix and the input vector
     for (int row = 0; row < n; row ++)
     {
@@ -130,9 +128,44 @@ ComplexNumber *FourierTransform::slow_transform(ComplexNumber *input, int n)
  */
 ComplexNumber *FourierTransform::fast_transform(ComplexNumber *input, int n)
 {
-    ComplexNumber *output = new ComplexNumber[n];
+    if (n == 1)
+        return input;
+
+    else
+    {
+        ComplexNumber *evens = new ComplexNumber[n / 2];
+        ComplexNumber *odds = new ComplexNumber[n / 2];
+
+        ComplexNumber *output = new ComplexNumber[n];
+
+        ComplexNumber x(1, 0);
+        ComplexNumber w1;
+        ComplexNumber w = w1.getRootOfUnity(n, 1); 
+
+        for (int i = 0; i < n; i++)
+        {
+            //std::cout << "i: " << i << " i/2: " << i/2 << std::endl;
+            if (i % 2 == 0) // even index
+            {
+                //std::cout << "even" << std::endl;
+                evens[i / 2] = input[i];
+            }
+            else // odd index
+            {
+                odds[(i / 2) + 1] = input[i];
+            }
+        }
+
+        for (int i = 0; i < (n / 2) - 1; i ++)
+        {
+            output[i] = evens[i] + x * odds[i];
+            output[i + (n / 2)] = evens[i] + x * odds[i];
+            x = x * w;
+        }
+        
+        return output;
+    }
     
-    return output;
 }
 
 

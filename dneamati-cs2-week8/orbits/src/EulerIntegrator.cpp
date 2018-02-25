@@ -107,7 +107,16 @@ void EulerIntegrator::forward_euler(double *x, double *y, double *vx,
 void EulerIntegrator::backward_euler(double *x, double *y, double *vx,
     double *vy, double h)
 {
-    
+    double next_vx = *vx + h * (- *x);
+	double next_x = *x + h * next_vx;
+
+	double next_vy = *vy + h * (- *y);
+	double next_y = *y + h * next_vy;
+
+	*x = next_x;
+	*y = next_y;
+	*vx = next_vx;
+	*vy = next_vy;
 }
 
 

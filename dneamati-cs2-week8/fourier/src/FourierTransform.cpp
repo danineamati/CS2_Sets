@@ -64,7 +64,53 @@
 ComplexNumber *FourierTransform::slow_transform(ComplexNumber *input, int n)
 {
     ComplexNumber *output = new ComplexNumber[n];
+    ComplexNumber w;
     
+    // We first need to make the new matrix
+    ComplexNumber **dft_matrix = new ComplexNumber * [n];
+    for (int i = 0; i < n; i ++)
+        dft_matrix[i] = new ComplexNumber[n];
+
+    // The zeroth row is straight-forward
+    for (int col = 0; col < n; col++)
+    {
+        dft_matrix[0][col] = ComplexNumber(1, 0);
+    }
+
+    // Now the second row
+    for (int col = 0; col < n; col++)
+    {
+        dft_matrix[1][col] = w.getRootOfUnity(n, col);
+    }
+
+    // Now the rest of the rows
+    for (int row = 2; row < n; row++) // row
+    {
+        for (int col = 0; col < n; col++) // column
+        {
+            dft_matrix[row][col] = w.getRootOfUnity(n, pow(col, row));
+        }
+    }
+
+    /*for (int j = 0; j < 3; j++)
+        w.printVector(dft_matrix[j], n);*/
+
+    // Now we multiply the matrix and the input vector
+    for (int row = 0; row < n; row ++)
+    {
+        output[row] = ComplexNumber(0, 0);
+
+        for (int col = 0; col < n; col ++)
+        {
+            output[row] = output[row] + dft_matrix[row][col]; 
+        }
+    }
+
+    // We are done with the matrix so we can delete it
+    for (int row = 0; row < n; row ++)
+        delete[] dft_matrix[row];
+    delete[] dft_matrix;
+
     return output;
 }
 

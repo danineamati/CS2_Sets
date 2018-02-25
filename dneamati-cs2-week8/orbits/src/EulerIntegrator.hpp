@@ -47,6 +47,11 @@
 
 
 /**
+ * @brief Helper function.
+ */
+double planetaryMotion(double *x, double *y, bool direction);
+
+/**
  * @brief A few numeric integration functions.
  */
 namespace EulerIntegrator

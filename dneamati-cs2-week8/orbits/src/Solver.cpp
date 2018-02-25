@@ -44,6 +44,7 @@
  */
 
 #include "Solver.hpp"
+#include <iostream>
 
 #define PRECISION       (1.e-10)
 #define TOLERANCE       (1.e-10)
@@ -65,7 +66,41 @@ using namespace std;
  */
 double Solver::bisection(double (*f)(double), double x1, double x2)
 {
-    return x1;
+	// Initializes just in case already in desired precision.
+	double best_guess = (x2 + x1)/2; 
+
+	// signbit returns true if negative and false (zero) if positive.
+    bool y1, y_current;
+
+	while(abs(x2 - x1) > PRECISION)
+	{
+		best_guess = (x2 + x1)/2;
+
+		y1 = signbit(f(x1));
+	    y_current = signbit(f( (x2 + x1) / 2 ));
+
+	    /*cout << "best_guess: " << best_guess << endl;
+		cout << "f(x1 = " << x1 << "): " << f(x1);
+		cout << " f(x2 = " << x2 << "): " << f(x2) << endl;
+    	cout << "f(xc = " << (x2 - x1)/2 << "): " << f((x2 + x1)/2) << endl;
+    	cout << "y1: " << y1 << " yc: "  << y_current << endl;*/
+
+
+		if ((y1 && y_current) || ((!y1) && (!y_current))) // Same sign
+	    {
+	    	//cout << "y1 is same sign as y_current." << endl;
+	    	x1 = (x2 + x1) / 2;
+	    }
+
+	    else
+	    {
+	    	//cout << "y1 is different sign as y_current." << endl;
+	    	x2 = (x2 + x1) / 2;
+	    }
+	    //cout << endl;
+	}
+
+	return best_guess;
 }
 
 
@@ -83,5 +118,14 @@ double Solver::bisection(double (*f)(double), double x1, double x2)
 double Solver::newton_raphson(double (*f)(double), double (*fp)(double),
     double x1)
 {
-    return x1;
+	double best_guess = x1;
+	double previous = x1;
+
+	while (abs(f(best_guess)) > TOLERANCE)
+	{
+		best_guess = previous - (f(previous)/fp(previous));
+		previous = best_guess;
+	}
+
+    return best_guess;
 }

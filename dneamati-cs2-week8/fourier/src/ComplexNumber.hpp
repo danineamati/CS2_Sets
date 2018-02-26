@@ -78,6 +78,8 @@ public:
     ComplexNumber conj();
     double norm();
     std::string toString();
+
+    static ComplexNumber powerComplex(ComplexNumber base, int exponent);
     
     ComplexNumber operator + (const ComplexNumber &other);
     ComplexNumber operator - (const ComplexNumber &other);

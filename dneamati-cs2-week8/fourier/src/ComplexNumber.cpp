@@ -270,6 +270,16 @@ string ComplexNumber::toString()
     return s;
 }
 
+ComplexNumber ComplexNumber::powerComplex(ComplexNumber base, int exponent)
+{
+    ComplexNumber result = base;
+
+    for (int i = 1; i < exponent; i ++)
+        result = result * base;
+
+    return result;
+}
+
 
 /**
  * @brief Returns a new complex number which is the sum of this and

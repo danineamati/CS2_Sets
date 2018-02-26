@@ -139,7 +139,7 @@ ComplexNumber *SpectralSynthesizer::getSpectrum(int n, double h)
                                  - radius * sin(phase));
         
         }
-    }    
+    }   
     
     return A;
 }

@@ -63,6 +63,7 @@
 namespace FourierTransform
 {
     ComplexNumber *slow_transform(ComplexNumber *input, int n);
+    ComplexNumber *FFT(ComplexNumber *input, ComplexNumber w, int n);
     ComplexNumber *fast_transform(ComplexNumber *input, int n);
     ComplexNumber *transform(double *input, int n);
     ComplexNumber *transform(ComplexNumber *input, int n, int m);

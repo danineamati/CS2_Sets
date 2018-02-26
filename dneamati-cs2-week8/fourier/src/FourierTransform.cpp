@@ -48,7 +48,6 @@
 
 #define ndx(obj,i,j,n)      (obj[(i)+(j)*n])
 
-
 /**
  * @brief Computes the discrete Fourier transform of the input data using
  * naive iteration.
@@ -65,8 +64,7 @@
 ComplexNumber *FourierTransform::slow_transform(ComplexNumber *input, int n)
 {
     ComplexNumber *output = new ComplexNumber[n];
-    ComplexNumber w;
-    
+
     // We first need to make the new matrix
     ComplexNumber **dft_matrix = new ComplexNumber * [n];
     for (int i = 0; i < n; i ++)
@@ -81,7 +79,7 @@ ComplexNumber *FourierTransform::slow_transform(ComplexNumber *input, int n)
     // Now the second row
     for (int col = 0; col < n; col++)
     {
-        dft_matrix[1][col] = w.getRootOfUnity(n, col);
+        dft_matrix[1][col] = ComplexNumber::getRootOfUnity(n, col);
     }
 
     // Now the rest of the rows
@@ -89,7 +87,8 @@ ComplexNumber *FourierTransform::slow_transform(ComplexNumber *input, int n)
     {
         for (int col = 0; col < n; col++) // column
         {
-            dft_matrix[row][col] = w.getRootOfUnity(n, pow(col, row));
+            dft_matrix[row][col] = ComplexNumber::powerComplex(dft_matrix[1][col], row);
+
         }
     }
 
@@ -100,7 +99,7 @@ ComplexNumber *FourierTransform::slow_transform(ComplexNumber *input, int n)
 
         for (int col = 0; col < n; col ++)
         {
-            output[row] = output[row] + dft_matrix[row][col]; 
+            output[row] = output[row] + input[col] * dft_matrix[row][col]; 
         }
     }
 
@@ -110,6 +109,64 @@ ComplexNumber *FourierTransform::slow_transform(ComplexNumber *input, int n)
     delete[] dft_matrix;
 
     return output;
+}
+
+/**
+ * @brief Computes the discrete Fourier transform of the input data using
+ * recursion. This function does all the work.
+ *
+ * @attention This is a student-implemented function.
+ * 
+ * @param input The complex numbers to be transformed.
+ *
+ * @param n The length of the input array.
+ * 
+ * @return An array of complex numbers containing the discrete Fourier
+ * transform of the input data.
+ */
+ComplexNumber *FourierTransform::FFT(ComplexNumber *input, ComplexNumber w, 
+        int n)
+{
+    ComplexNumber *output = new ComplexNumber[n];
+
+    if (n == 1)
+    {
+        output[0] = input[0];
+        return output;
+    }
+
+    else
+    {
+        ComplexNumber *evenTerms = new ComplexNumber[n / 2];
+        ComplexNumber *oddTerms = new ComplexNumber[n / 2];
+
+
+        for (int i = 0; i < n / 2; i++)
+        {
+            evenTerms[i] = input[i * 2];
+            oddTerms[i] = input[(i * 2) + 1];
+        }
+
+        ComplexNumber *evens = FFT(evenTerms, w * w, n / 2);
+        ComplexNumber *odds = FFT(oddTerms, w * w, n / 2);
+
+        ComplexNumber x(1, 0);
+
+        for (int i = 0; i < (n / 2); i ++)
+        {
+            output[i] = evens[i] + x * odds[i];
+            output[i + (n / 2)] = evens[i] - x * odds[i];
+            x = x * w;
+        }
+
+        delete[] evenTerms;
+        delete[] oddTerms;
+
+        delete[] evens;
+        delete[] odds;
+        
+        return output;
+    }
 }
 
 
@@ -128,43 +185,10 @@ ComplexNumber *FourierTransform::slow_transform(ComplexNumber *input, int n)
  */
 ComplexNumber *FourierTransform::fast_transform(ComplexNumber *input, int n)
 {
-    if (n == 1)
-        return input;
+    // We just need the first power.
+    ComplexNumber w = ComplexNumber::getRootOfUnity(n, 1);
 
-    else
-    {
-        ComplexNumber *evens = new ComplexNumber[n / 2];
-        ComplexNumber *odds = new ComplexNumber[n / 2];
-
-        ComplexNumber *output = new ComplexNumber[n];
-
-        ComplexNumber x(1, 0);
-        ComplexNumber w1;
-        ComplexNumber w = w1.getRootOfUnity(n, 1); 
-
-        for (int i = 0; i < n; i++)
-        {
-            //std::cout << "i: " << i << " i/2: " << i/2 << std::endl;
-            if (i % 2 == 0) // even index
-            {
-                //std::cout << "even" << std::endl;
-                evens[i / 2] = input[i];
-            }
-            else // odd index
-            {
-                odds[(i / 2) + 1] = input[i];
-            }
-        }
-
-        for (int i = 0; i < (n / 2) - 1; i ++)
-        {
-            output[i] = evens[i] + x * odds[i];
-            output[i + (n / 2)] = evens[i] + x * odds[i];
-            x = x * w;
-        }
-        
-        return output;
-    }
+    return FFT(input, w, n);
     
 }
 

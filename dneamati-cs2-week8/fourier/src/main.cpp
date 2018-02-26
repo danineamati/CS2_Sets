@@ -585,8 +585,24 @@ int main(int argc, char *argv[])
     SpectralSynthesizer synth;
 
     vector<double *> surfaceList;
-    ComplexNumber *spectrum_init = synth.getSpectrum(N, H);
-    double *surf_init = synth.getSurface(spectrum_init, N);
+
+    ComplexNumber *spectrum_init;
+    double *surf_init;
+
+    if (argc == 2 && atoi(argv[1]) == 1)
+    {
+        spectrum_init = synth.getOceanSpectrum(N, A, B);
+        surf_init = synth.getOceanSurface(N, A, B);
+    }
+    else
+    {
+        spectrum_init = synth.getSpectrum(N, H);
+        surf_init = synth.getSurface(spectrum_init, N);
+    }
+    /*//ComplexNumber *spectrum_init = synth.getSpectrum(N, H);
+    ComplexNumber *spectrum_init = synth.getOceanSpectrum(N, A, B);
+    //double *surf_init = synth.getSurface(spectrum_init, N);
+    double *surf_init = synth.getOceanSurface(N, A, B);*/
     surfaceList.push_back(surf_init);
 
     while (nn / 2 != 1)

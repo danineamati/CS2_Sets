@@ -96,24 +96,25 @@ float kahan_sum(vector<float> vec)
  * @ process:  Splits the vector in two if size is above cut off. 
  *		   Otherwise preforms normal summation.
  */
-float pairwise_sum(vector<float> vec, unsigned int start, 
+float pairwise_sum(vector<float> &vec, unsigned int start, 
 	unsigned int end, unsigned int cutOff)
 {
 	// State the base case
-	if (end - start <= cutOff)
+	if (end - start + 1 <= cutOff)
 	{
 		float sum = 0.;
 
-		for (unsigned int i = start; i < end; i++)
+		for (unsigned int i = start; i <= end; i++)
 			sum += vec[i];
-
 		return sum;
 	}
 	// Otherwise we use recursion
 	else
 	{
-		float sum1 = pairwise_sum(vec, start, end / 2, cutOff);
-		float sum2 = pairwise_sum(vec, end / 2, end, cutOff);
+		int range = end - start;
+		float sum1 = pairwise_sum(vec, start, start + range / 2, cutOff);
+		float sum2 = pairwise_sum(vec, start + range / 2 + 1, end, cutOff);
+
 		return sum1 + sum2;
 	}
 }
@@ -130,8 +131,8 @@ int main()
 	// Try out our summation algorithms!
 	cout << "Result of naive summation: " << naive_sum(vec) << endl;
 	cout << "Result of Kahan summation: " << kahan_sum(vec) << endl;
-	cout << "Result of pairwise_sum summation (cutOff = 20): ";
-	cout << pairwise_sum(vec, 0, vec.size(), 20) << endl;
-	cout << "Result of pairwise_sum summation (cutOff = 2): ";
-	cout << pairwise_sum(vec, 0, vec.size(), 2) << endl;
+	cout << "Result of pairwise_sum summation (cutOff = 200000): ";
+	cout << pairwise_sum(vec, 0, vec.size() - 1, 200000) << endl;
+	cout << "Result of pairwise_sum summation (cutOff = 200): ";
+	cout << pairwise_sum(vec, 0, vec.size() - 1, 200) << endl;
 }

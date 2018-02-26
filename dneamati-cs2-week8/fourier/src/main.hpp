@@ -61,6 +61,8 @@
 
 #define N       (128)
 #define H       (0.85)
+#define A 		(50)
+#define B 		(2)
 
 #define ndx(obj,i,j,n)      (obj[(i)+(j)*n])
 

@@ -187,6 +187,103 @@ double *SpectralSynthesizer::getSurface(int n, double h)
     return ret;
 }
 
+/**
+ * @brief Computes the Fourier coefficients of an ocean surface using the
+ * SpectralSynthesisFM2D algorithm.
+ *
+ * @attention This is a student-implemented function.
+ *
+ * @param n The size of the surface to create. Must be a positive power of 2.
+ * 
+ * @param a and b Controls the fractal dimension of the output; the output has
+ * fractal dimension D = 3 - h
+ * 
+ * @return An array of complex numbers containing the Fourier coefficients of
+ * the surface, of size n^2.
+ */
+ComplexNumber *SpectralSynthesizer::getOceanSpectrum(int n, double a, double b)
+{
+    // Check that n is a power of 2
+    assert(powerOfTwo(n));
+    
+    ComplexNumber *A = new ComplexNumber[n*n];
+
+    double phase, radius, f;
+
+    for (int i = 0; i < n / 2; i++)
+    {
+        for (int j = 0; j < n / 2; j ++)
+        {
+            phase = 2 * PI * uniform();
+            f = sqrt(i * i + j * j);
+            int i0, j0;
+
+            if (i != 0 || j != 0)
+                radius = (a / pow(f, 5)) * exp(-pow((b / f), 4));
+            else
+                radius = 0;
+
+            ndx(A, i, j, n) = ComplexNumber(radius * cos(phase),
+                                 radius * sin(phase));
+
+            if (i == 0)
+                i0 = 0;
+            else
+                i0 = n - 1;
+
+            if (j == 0)
+                j0 = 0;
+            else
+                j0 = n - 1;
+
+            ndx(A, i0, j0, n) = ComplexNumber(radius * cos(phase),
+                                 - radius * sin(phase));
+        }
+    }
+
+    ndx(A, n / 2, 0, n) = ComplexNumber(ndx(A, n / 2, 0, n).real(), 0);
+    ndx(A, 0, n / 2, n) = ComplexNumber(ndx(A, n / 2, 0, n).real(), 0);
+    ndx(A, n / 2, n / 2, n) = ComplexNumber(ndx(A, n / 2, 0, n).real(), 0);
+
+    for (int i = 1; i < (n / 2) - 1; i ++)
+    {
+        for (int j = 1; j < (n / 2) - 1; j++)
+        {
+            phase = 2 * PI * uniform();
+            f = sqrt(i * i + j * j);
+            radius = (a / pow(f, 5)) * exp(-pow((b / f), 4));
+
+            ndx(A, i, n - j, n) = ComplexNumber(radius * cos(phase),
+                                 radius * sin(phase));
+            ndx(A, n - i, j, n) = ComplexNumber(radius * cos(phase),
+                                 - radius * sin(phase));
+        
+        }
+    }   
+    
+    return A;
+}
+
+/**
+ * @brief Computes the heights of a fractal surface using the
+ * SpectralSynthesisFM2D algorithm.
+ * 
+ * @param n The size of the surface to create. Must be a positive power of 2.
+ * 
+ * @param h Controls the fractal dimension of the output; the output has
+ * fractal dimension D = 3 - h
+ * 
+ * @return An array of surface heights, of size n^2.
+ */
+double *SpectralSynthesizer::getOceanSurface(int n, double a, double b)
+{
+    ComplexNumber *spec = getOceanSpectrum(n, a, b);
+    double *ret = getSurface(spec, n);
+
+    delete[] spec;
+    return ret;
+}
+
 
 /**
  * @brief Removes all but the m lowest order Fourier coefficients.

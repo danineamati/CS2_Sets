@@ -104,7 +104,7 @@ double df4(double x)
 
 int main()
 {
-	std::cout << "TESTING BISTECTION METHOD" << std::endl;
+	std::cout << "TESTING BISECTION METHOD" << std::endl;
 	std::cout << "--------------------------------------" << std::endl;
 	// Test 0: Analytically solvable
 	// x + 1
